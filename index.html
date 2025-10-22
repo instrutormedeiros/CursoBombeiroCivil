@@ -297,41 +297,28 @@ table.custom-table tr:nth-child(even) { background-color: #f8fafc; }
 
 
 <header class="header-gradient text-white py-8 shadow-lg">
-
-    <div class="container mx-auto px-4 md:px-6 max-w-7xl flex flex-col md:flex-row justify-between items-center">
-
-        <div class="flex items-center mb-4 md:mb-0 text-center md:text-left">
-
-            <div class="bg-white p-3 rounded-full mr-5 shadow-md hidden md:block">
-
-                <i class="fas fa-shield-alt text-3xl text-red-600"></i>
-
+    <div class="container mx-auto px-4 md:px-6 max-w-7xl flex justify-between items-center">
+        <div class="flex items-center">
+            <div class="flex items-center mb-4 md:mb-0 text-center md:text-left">
+                <div class="bg-white p-3 rounded-full mr-5 shadow-md hidden md:block">
+                    <i class="fas fa-shield-alt text-3xl text-red-600"></i>
+                </div>
+                <div>
+                    <h1 class="text-3xl md:text-4xl font-bold">Formação Profissional</h1>
+                    <p class="text-blue-100 text-lg">Bombeiro Civil e Brigadista</p>
+                </div>
             </div>
-
-            <div>
-
-                <h1 class="text-3xl md:text-4xl font-bold">Formação Profissional</h1>
-
-                <p class="text-blue-100 text-lg">Bombeiro Civil e Brigadista</p>
-
-            </div>
-
+            <button id="home-button" title="Voltar ao Início" class="text-white text-2xl hover:text-orange-300 transition-colors duration-300 ml-6">
+                <i class="fas fa-home"></i>
+            </button>
         </div>
-
         <div class="flex space-x-2">
-
             <div class="bg-white bg-opacity-20 py-2 px-4 rounded-full text-sm font-semibold">
-
-                <i class="fas fa-book-open mr-2"></i><span id="course-modules">44</span> Módulos de Aprendizagem
-
+                <i class="fas fa-book-open mr-2"></i><span id="course-modules">54</span> Módulos de Aprendizagem
             </div>
-
         </div>
-
     </div>
-
 </header>
-
 
 
 <div class="container mx-auto px-4 md:px-6 py-10 flex flex-col lg:flex-row gap-8 max-w-7xl">
@@ -789,9 +776,50 @@ moduleContent['module45'] = { id: "module45", title: "45. Introdução ao Salvam
 
         };
 
+function getWelcomeContent() {
+    // Esta função retorna o HTML original da tela de boas-vindas
+    return `
+    <div class="text-center py-8">
+        <div class="floating inline-block p-5 bg-red-100 rounded-full mb-6">
+            <i class="fas fa-fire-extinguisher text-6xl text-red-600"></i>
+        </div>
+        <h2 class="text-4xl font-bold mb-4 text-gray-800">Torne-se um Profissional de Elite em Emergências</h2>
+        <p class="text-lg text-gray-600 max-w-3xl mx-auto mb-8">
+            Bem-vindo ao <strong>Curso de Formação para Bombeiro Civil e Brigadista</strong>. Esta é a sua jornada para adquirir conhecimento técnico, habilidades práticas e a confiança necessária para proteger vidas e patrimônios. Explore os módulos e prepare-se para se destacar.
+        </p>
+        <button id="start-course" class="action-button pulse text-lg">
+            <i class="fas fa-play-circle mr-2"></i> Iniciar Curso Agora
+        </button>
+    </div>`;
+}
+
+function goToHomePage() {
+    const contentArea = document.getElementById('content-area');
+    contentArea.innerHTML = getWelcomeContent(); // Restaura o conteúdo inicial
+
+    // Esconde a navegação de módulos (Anterior/Próximo)
+    document.getElementById('module-nav').classList.add('hidden');
+
+    // Remove a seleção de qualquer módulo ativo na lista
+    document.querySelectorAll('.module-list-item.active').forEach(item => {
+        item.classList.remove('active');
+    });
+
+    currentModuleId = null; // Reseta a variável de controle do módulo
+
+    // Reativa o botão "Iniciar Curso Agora" da página inicial
+    document.getElementById('start-course').addEventListener('click', () => {
+        loadModuleContent('module1');
+        document.querySelector('#panel-rh').style.maxHeight = document.querySelector('#panel-rh').scrollHeight + "px";
+        document.querySelector('#panel-rh').previousElementSibling.classList.add('active');
+    });
+}
+// ==============================================================
 
 
-        function init() {
+function init() {
+
+
 
             document.getElementById('total-modules').textContent = totalModules;
             document.getElementById('course-modules').textContent = totalModules; 
@@ -860,41 +888,30 @@ moduleContent['module45'] = { id: "module45", title: "45. Introdução ao Salvam
 
 
 
-        function addEventListeners() {
+function addEventListeners() {
+    document.querySelectorAll('.module-list-item').forEach(item => {
+        item.addEventListener('click', () => loadModuleContent(item.dataset.module));
+    });
 
-            document.querySelectorAll('.module-list-item').forEach(item => {
+    document.querySelectorAll('.accordion-button').forEach(button => {
+        button.addEventListener('click', toggleAccordion);
+    });
 
-                item.addEventListener('click', () => loadModuleContent(item.dataset.module));
+    document.getElementById('start-course').addEventListener('click', () => {
+        loadModuleContent('module1');
+        document.querySelector('#panel-rh').style.maxHeight = document.querySelector('#panel-rh').scrollHeight + "px";
+        document.querySelector('#panel-rh').previousElementSibling.classList.add('active');
+    });
 
-            });
+    document.getElementById('prev-module').addEventListener('click', goToPreviousModule);
+    document.getElementById('next-module').addEventListener('click', goToNextModule);
+    document.getElementById('module-search').addEventListener('input', filterModules);
+    document.getElementById('close-congrats').addEventListener('click', hideCongratulations);
+    document.getElementById('modal-overlay').addEventListener('click', hideCongratulations);
 
-            document.querySelectorAll('.accordion-button').forEach(button => {
-
-                button.addEventListener('click', toggleAccordion);
-
-            });
-
-            document.getElementById('start-course').addEventListener('click', () => {
-
-                loadModuleContent('module1');
-
-                document.querySelector('#panel-rh').style.maxHeight = document.querySelector('#panel-rh').scrollHeight + "px";
-
-                document.querySelector('#panel-rh').previousElementSibling.classList.add('active');
-
-            });
-
-            document.getElementById('prev-module').addEventListener('click', goToPreviousModule);
-
-            document.getElementById('next-module').addEventListener('click', goToNextModule);
-
-            document.getElementById('module-search').addEventListener('input', filterModules);
-
-            document.getElementById('close-congrats').addEventListener('click', hideCongratulations);
-
-            document.getElementById('modal-overlay').addEventListener('click', hideCongratulations);
-
-        }
+    // Ativa o novo botão "Home"
+    document.getElementById('home-button').addEventListener('click', goToHomePage);
+}
 
 
 
@@ -1249,4 +1266,5 @@ moduleContent['module45'] = { id: "module45", title: "45. Introdução ao Salvam
 </body>
 
 </html>
+
 
