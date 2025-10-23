@@ -58,10 +58,13 @@
         .achievement-icon { font-size: 3rem; color: #ced4da; margin-bottom: 1rem; transition: color 0.5s ease; }
         .dark .achievement-icon { color: #4b5563; }
         .achievement.unlocked .achievement-icon { color: var(--accent); animation: pulse 1.5s infinite; }
-        .congratulations-modal { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0.9); z-index: 100; background-color: var(--panel-bg); padding: 2.5rem; border-radius: 1.5rem; box-shadow: 0 20px 50px rgba(0,0,0,0.3); text-align: center; max-width: 32rem; width: 90%; opacity: 0; pointer-events: none; transition: all 0.5s cubic-bezier(0.68, -0.55, 0.27, 1.55); }
-        .congratulations-modal.show { opacity: 1; transform: translate(-50%, -50%) scale(1); pointer-events: auto; }
+        
+        /* Modais */
+        .modal { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0.9); z-index: 100; background-color: var(--panel-bg); padding: 2.5rem; border-radius: 1.5rem; box-shadow: 0 20px 50px rgba(0,0,0,0.3); text-align: center; max-width: 32rem; width: 90%; opacity: 0; pointer-events: none; transition: all 0.5s cubic-bezier(0.68, -0.55, 0.27, 1.55); }
+        .modal.show { opacity: 1; transform: translate(-50%, -50%) scale(1); pointer-events: auto; }
         .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 48, 73, 0.7); backdrop-filter: blur(5px); z-index: 99; opacity: 0; pointer-events: none; transition: opacity 0.5s ease; }
         .modal-overlay.show { opacity: 1; pointer-events: auto; }
+
         .accordion-button { width: 100%; text-align: left; background-color: #f8f9fa; color: var(--dark-text); cursor: pointer; padding: 1rem; border: 1px solid var(--border-color); border-radius: 0.5rem; transition: background-color 0.3s ease; display: flex; justify-content: space-between; align-items: center; font-weight: 700; }
         .dark .accordion-button { background-color: #374151; border-color: #374151; }
         .accordion-button:hover, .accordion-button.active { background-color: #e9ecef; }
@@ -78,9 +81,10 @@
         .module-list-item.completed .fa-check-circle { display: inline-block; color: var(--success); }
         .module-list-item i.module-icon { margin-right: 0.75rem; font-size: 1.1rem; width: 20px; text-align: center; }
         .module-list-item .fa-check-circle { display: none; margin-left: auto; margin-right: 0; font-size: 1rem; }
+        
         #content-area { background-color: var(--panel-bg); }
         #content-area h3 { color: var(--secondary); border-bottom: 2px solid var(--border-color); }
-        #content-area h4 { color: var(--secondary); }
+        #content-area h4 { color: #003049; }
         #content-area p { color: var(--light-text); }
         #content-area ul, #content-area li { color: var(--light-text); }
         #content-area p.font-semibold { color: var(--secondary); }
@@ -90,6 +94,7 @@
         .dark #content-area p, .dark #content-area ul, .dark #content-area li { color: var(--light-text); }
         .dark #content-area p.font-semibold { color: #a5b4fc; }
         .dark #content-area strong { color: var(--accent); }
+        
         .key-concept { background-color: var(--info-bg); border-left: 4px solid var(--info-border); }
         .key-concept h5 { color: #2c5282; }
         .dark .key-concept h5 { color: #bfdbfe; }
@@ -112,7 +117,7 @@
     <div id="off-canvas-sidebar" class="lg:hidden fixed top-0 left-0 h-full w-4/5 max-w-sm z-50 transform -translate-x-full transition-transform duration-300 ease-in-out">
         <div class="p-0 h-full flex flex-col">
             <div class="p-4 flex justify-between items-center border-b border-gray-200 dark:border-gray-700">
-                <h2 class="text-xl font-semibold flex items-center text-[var(--secondary)] dark:text-white"><i class="fas fa-list-ul mr-3 text-orange-500"></i> Conteúdo</h2>
+                <h2 class="text-xl font-semibold flex items-center text-blue-900 dark:text-white"><i class="fas fa-list-ul mr-3 text-orange-500"></i> Conteúdo</h2>
                 <button id="close-sidebar-button" class="text-2xl text-gray-500 dark:text-gray-400 hover:text-red-500"><i class="fas fa-times"></i></button>
             </div>
             <div class="p-4 flex-grow overflow-y-auto" id="mobile-module-container"></div>
@@ -159,192 +164,21 @@
                 </main>
             </div>
         </div>
-        <div id="congratulations-modal" class="congratulations-modal"><div class="floating inline-block p-4 bg-yellow-100 rounded-full mb-4"><i class="fas fa-trophy text-4xl text-yellow-600"></i></div><h2 class="text-3xl font-bold mb-2">Parabéns!</h2><p class="text-lg mb-6 text-gray-600 dark:text-gray-300">Você concluiu o curso com sucesso!</p><button id="close-congrats" class="action-button" style="background: var(--secondary);"><i class="fas fa-times mr-2"></i> Fechar</button></div>
+        
+        <div id="congratulations-modal" class="modal"><div class="floating inline-block p-4 bg-yellow-100 rounded-full mb-4"><i class="fas fa-trophy text-4xl text-yellow-600"></i></div><h2 class="text-3xl font-bold mb-2">Parabéns!</h2><p class="text-lg mb-6 text-gray-600 dark:text-gray-300">Você concluiu o curso com sucesso!</p><button id="close-congrats" class="action-button" style="background: var(--secondary);"><i class="fas fa-times mr-2"></i> Fechar</button></div>
         <div id="modal-overlay" class="modal-overlay"></div>
-        <footer class="bg-gray-800 dark:bg-black text-white py-10 mt-12">
-            <div class="container mx-auto px-4 md:px-6 max-w-7xl">
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                    <div><h3 class="text-xl font-semibold mb-4">Formação Bombeiro Civil / Brigadista</h3><p class="text-gray-400">Capacitação profissional de excelência.</p></div>
-                    <div><h3 class="text-xl font-semibold mb-4">Contato e Realização</h3><div class="flex flex-col space-y-3"><a href="https://www.instagram.com/coordenadormedeiros/" class="flex items-center text-gray-300 social-link" target="_blank"><i class="fab fa-instagram w-6"></i> @coordenadormedeiros</a><a href="https://www.linkedin.com/in/chefemedeiros/" class="flex items-center text-gray-300 social-link" target="_blank"><i class="fab fa-linkedin w-6"></i> chefemedeiros</a><a href="https://instrutormedeiros.github.io/fardamento-acampamento/" class="flex items-center text-gray-300 social-link" target="_blank"><i class="fas fa-shirt w-6"></i> Artigos Militares</a></div></div>
-                </div>
-                <div class="border-t border-gray-700 mt-8 pt-6 text-center text-gray-500"><p>© 2013-2025 Curso de Formação Profissional. Todos os direitos reservados.</p></div>
-            </div>
-        </footer>
-    </div>
-    <nav class="lg:hidden fixed bottom-0 left-0 w-full z-40">
-        <div class="flex justify-around items-center h-16 bg-white dark:bg-gray-800 shadow-[0_-2px_10px_rgba(0,0,0,0.1)] dark:border-t dark:border-gray-700">
-            <button id="bottom-nav-home" class="flex flex-col items-center justify-center text-gray-600 dark:text-gray-300 w-full h-full"><i class="fas fa-home text-2xl"></i><span class="text-xs">Início</span></button>
-            <button id="bottom-nav-modules" class="flex flex-col items-center justify-center text-gray-600 dark:text-gray-300 w-full h-full"><i class="fas fa-list-ul text-2xl"></i><span class="text-xs">Módulos</span></button>
-            <button id="bottom-nav-theme" class="flex flex-col items-center justify-center text-gray-600 dark:text-gray-300 w-full h-full"><i class="fas fa-moon text-2xl"></i><span class="text-xs">Tema</span></button>
-        </div>
-    </nav>
 
-    <script>
-    document.addEventListener('DOMContentLoaded', () => {
-
-        <!DOCTYPE html>
-<html lang="pt-BR" class="">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Curso de Formação | Bombeiro Civil e Brigadista</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Lora:wght@600;700&family=Lato:wght@400;700&display=swap" rel="stylesheet">
-    <style>
-        /* TEMA CLARO - Baseado no seu CSS Original */
-        :root {
-            --primary: #c1121f; --primary-dark: #a4161a; --secondary: #003049; --accent: #f77f00;
-            --dark-text: #1a202c; --light-text: #2d3748; --light-bg: #f8f9fa; --success: #2a9d8f;
-            --info-bg: #e6f4ff; --info-border: #90cdf4; --panel-bg: #ffffff; --border-color: #e2e8f0;
-        }
-        /* TEMA ESCURO */
-        .dark {
-            --primary: #d90429; --primary-dark: #c1121f; --secondary: #1d3557; --accent: #ff9e00;
-            --dark-text: #edf2f4; --light-text: #d1d5db; --light-bg: #111827; --success: #2a9d8f;
-            --info-bg: #1e3a8a; --info-border: #3b82f6; --panel-bg: #1f2937; --border-color: #374151;
-        }
-
-        body { font-family: 'Lato', sans-serif; scroll-behavior: smooth; background-color: var(--light-bg); color: var(--dark-text); padding-bottom: 70px; transition: background-color 0.3s, color 0.3s; }
-        @media (min-width: 1024px) { body { padding-bottom: 0; } }
-        h1, h2, h3 { font-family: 'Lora', serif; }
-        .header-gradient { background: linear-gradient(135deg, var(--secondary) 0%, #1d3557 100%); }
-        .floating { animation: floating 3s ease-in-out infinite; }
-        @keyframes floating { 0% { transform: translateY(0px); } 50% { transform: translateY(-8px); } 100% { transform: translateY(0px); } }
-        .pulse { animation: pulse 2s infinite; }
-        @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.03); } 100% { transform: scale(1); } }
-        .progress-container { position: sticky; top: 0; z-index: 45; background-color: var(--panel-bg); border-bottom: 1px solid var(--border-color); padding: 0.75rem 0; box-shadow: 0 4px 15px rgba(0,0,0,0.08); transition: background-color 0.3s, border-color 0.3s; }
-        .progress-bar { height: 0.75rem; background: linear-gradient(90deg, var(--accent), var(--primary)); transition: width 0.5s ease; border-radius: 1rem; }
-        #off-canvas-sidebar { background-color: var(--panel-bg); }
-        #off-canvas-sidebar.open { transform: translateX(0); }
-        .sidebar-overlay { transition: opacity 0.3s; }
-        .sidebar-overlay.show { opacity: 1; pointer-events: auto; }
-        .sidebar { background: var(--panel-bg); padding: 1.5rem; border-radius: 1rem; box-shadow: 0 10px 25px rgba(0,0,0,0.07); border: 1px solid var(--border-color); }
-        .action-button { background: linear-gradient(90deg, var(--primary), var(--primary-dark)); color: white; font-weight: 700; padding: 0.75rem 2rem; border-radius: 0.5rem; transition: all 0.3s ease; text-align: center; display: inline-block; border: none; cursor: pointer; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
-        .action-button:hover { background: linear-gradient(90deg, var(--primary-dark), #a4161a); transform: translateY(-2px); box-shadow: 0 7px 14px rgba(0,0,0,0.15); }
-        .action-button:disabled { background-color: #adb5bd; color: #6c757d; cursor: not-allowed; transform: none; box-shadow: none; }
-        .quiz-option { cursor: pointer; padding: 1rem; border-radius: 0.5rem; margin-bottom: 0.75rem; transition: all 0.3s ease; background-color: #f8f9fa; border: 2px solid #e9ecef; color: var(--dark-text); }
-        .dark .quiz-option { background-color: #374151; border-color: #4b5563; color: var(--dark-text); }
-        .quiz-option:hover { background-color: #e9ecef; transform: translateX(5px); }
-        .dark .quiz-option:hover { background-color: #4b5563; }
-        .quiz-option.correct { background-color: var(--success) !important; color: white !important; border-color: var(--success) !important; }
-        .quiz-option.incorrect { background-color: var(--primary) !important; color: white !important; border-color: var(--primary) !important; }
-        .explanation { padding: 1rem; margin-top: 0.5rem; margin-bottom: 1.5rem; border-radius: 0.5rem; background-color: var(--info-bg); color: #1e40af; border-left: 4px solid var(--info-border); animation: fadeIn 0.5s ease; }
-        .dark .explanation { background-color: var(--info-bg); color: #93c5fd; border-color: var(--info-border); }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
-        .module-nav { background-color: var(--panel-bg); border-top: 1px solid var(--border-color); transition: background-color 0.3s, border-color 0.3s; padding: 1rem; box-shadow: 0 -2px 15px rgba(0,0,0,0.1); z-index: 35; border-radius: 0 0 1rem 1rem; }
-        .achievement { background: var(--panel-bg); border-radius: 1rem; padding: 1.5rem; box-shadow: 0 5px 15px rgba(0,0,0,0.08); text-align: center; transition: all 0.3s ease; border: 2px solid transparent; }
-        .achievement.unlocked { border-color: var(--accent); transform: scale(1.05); background: linear-gradient(135deg, #fffbeb, #fff); }
-        .dark .achievement.unlocked { background: linear-gradient(135deg, #4b5563, #374151); }
-        .achievement-icon { font-size: 3rem; color: #ced4da; margin-bottom: 1rem; transition: color 0.5s ease; }
-        .dark .achievement-icon { color: #4b5563; }
-        .achievement.unlocked .achievement-icon { color: var(--accent); animation: pulse 1.5s infinite; }
-        .congratulations-modal { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0.9); z-index: 100; background-color: var(--panel-bg); padding: 2.5rem; border-radius: 1.5rem; box-shadow: 0 20px 50px rgba(0,0,0,0.3); text-align: center; max-width: 32rem; width: 90%; opacity: 0; pointer-events: none; transition: all 0.5s cubic-bezier(0.68, -0.55, 0.27, 1.55); }
-        .congratulations-modal.show { opacity: 1; transform: translate(-50%, -50%) scale(1); pointer-events: auto; }
-        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 48, 73, 0.7); backdrop-filter: blur(5px); z-index: 99; opacity: 0; pointer-events: none; transition: opacity 0.5s ease; }
-        .modal-overlay.show { opacity: 1; pointer-events: auto; }
-        .accordion-button { width: 100%; text-align: left; background-color: #f8f9fa; color: var(--dark-text); cursor: pointer; padding: 1rem; border: 1px solid var(--border-color); border-radius: 0.5rem; transition: background-color 0.3s ease; display: flex; justify-content: space-between; align-items: center; font-weight: 700; }
-        .dark .accordion-button { background-color: #374151; border-color: #374151; }
-        .accordion-button:hover, .accordion-button.active { background-color: #e9ecef; }
-        .dark .accordion-button:hover, .dark .accordion-button.active { background-color: var(--secondary); }
-        .accordion-button .fas { transition: transform 0.3s ease; }
-        .accordion-button.active .fas { transform: rotate(180deg); }
-        .accordion-panel { padding: 0 0.5rem; max-height: 0; overflow: hidden; transition: max-height 0.4s ease-out; }
-        .module-list-item { padding: 0.85rem 1rem; margin: 0.5rem 0; border-radius: 0.5rem; background-color: #f8f9fa; cursor: pointer; transition: all 0.3s ease; display: flex; align-items: center; border-left: 4px solid #dee2e6; border: 1px solid var(--border-color); font-size: 0.9rem; color: var(--dark-text); }
-        .dark .module-list-item { background-color: #374151; border-color: #374151; border-left-color: #4b5563; }
-        .module-list-item:hover { background: #e9ecef; transform: translateX(5px); }
-        .dark .module-list-item:hover { background-color: #4b5563; }
-        .module-list-item.active { background: var(--secondary) !important; color: white !important; font-weight: 700; border-left-color: var(--accent) !important; box-shadow: 0 4px 10px rgba(0,48,73,0.3); }
-        .module-list-item.completed { border-left-color: var(--success) !important; }
-        .module-list-item.completed .fa-check-circle { display: inline-block; color: var(--success); }
-        .module-list-item i.module-icon { margin-right: 0.75rem; font-size: 1.1rem; width: 20px; text-align: center; }
-        .module-list-item .fa-check-circle { display: none; margin-left: auto; margin-right: 0; font-size: 1rem; }
-        #content-area { background-color: var(--panel-bg); }
-        #content-area h3 { color: var(--secondary); border-bottom: 2px solid var(--border-color); }
-        #content-area h4 { color: var(--secondary); }
-        #content-area p { color: var(--light-text); }
-        #content-area ul, #content-area li { color: var(--light-text); }
-        #content-area p.font-semibold { color: var(--secondary); }
-        #content-area strong { color: var(--secondary); font-weight: 700; }
-        .dark #content-area h3 { color: var(--accent); }
-        .dark #content-area h4 { color: #93c5fd; }
-        .dark #content-area p, .dark #content-area ul, .dark #content-area li { color: var(--light-text); }
-        .dark #content-area p.font-semibold { color: #a5b4fc; }
-        .dark #content-area strong { color: var(--accent); }
-        .key-concept { background-color: var(--info-bg); border-left: 4px solid var(--info-border); }
-        .key-concept h5 { color: #2c5282; }
-        .dark .key-concept h5 { color: #bfdbfe; }
-        nav { background-color: var(--panel-bg); border-color: var(--border-color); }
-        .dark nav { background-color: #1f2937; }
-        nav button { color: #4b5563; }
-        .dark nav button { color: #9ca3af; }
-        #toast-container { position: fixed; top: 1.25rem; right: 1.25rem; z-index: 1000; }
-        .toast { background-color: #1f2937; color: white; padding: 1rem 1.5rem; border-radius: 0.5rem; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -2px rgba(0,0,0,0.05); display: flex; align-items: center; margin-bottom: 1rem; opacity: 0; transform: translateX(100%); animation: toast-in 0.5s forwards, toast-out 0.5s 4s forwards; }
-        .toast i { color: var(--accent); font-size: 1.5rem; margin-right: 0.75rem; }
-        @keyframes toast-in { to { opacity: 1; transform: translateX(0); } }
-        @keyframes toast-out { to { opacity: 0; transform: translateX(100%); } }
-    </style>
-</head>
-<body class="antialiased">
-
-    <div id="toast-container"></div>
-    <div id="sidebar-overlay" class="fixed inset-0 bg-black bg-opacity-60 z-40 opacity-0 pointer-events-none sidebar-overlay lg:hidden"></div>
-    
-    <div id="off-canvas-sidebar" class="lg:hidden fixed top-0 left-0 h-full w-4/5 max-w-sm z-50 transform -translate-x-full transition-transform duration-300 ease-in-out">
-        <div class="p-0 h-full flex flex-col">
-            <div class="p-4 flex justify-between items-center border-b border-gray-200 dark:border-gray-700">
-                <h2 class="text-xl font-semibold flex items-center text-[var(--secondary)] dark:text-white"><i class="fas fa-list-ul mr-3 text-orange-500"></i> Conteúdo</h2>
-                <button id="close-sidebar-button" class="text-2xl text-gray-500 dark:text-gray-400 hover:text-red-500"><i class="fas fa-times"></i></button>
+        <div id="name-prompt-modal" class="modal">
+            <div class="floating inline-block p-4 bg-blue-100 dark:bg-blue-900 rounded-full mb-4">
+                <i class="fas fa-id-card text-4xl text-blue-600 dark:text-blue-300"></i>
             </div>
-            <div class="p-4 flex-grow overflow-y-auto" id="mobile-module-container"></div>
+            <h2 class="text-3xl font-bold mb-2 text-gray-800 dark:text-white">Boas-vindas!</h2>
+            <p class="text-lg mb-6 text-gray-600 dark:text-gray-300">Para uma experiência mais pessoal, como gostaria de ser chamado?</p>
+            <input type="text" id="name-input" class="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 bg-gray-50 dark:bg-gray-700 text-center text-lg text-gray-900 dark:text-white" placeholder="Digite seu nome aqui...">
+            <button id="save-name-button" class="action-button w-full mt-4"><i class="fas fa-check mr-2"></i> Salvar e Iniciar</button>
         </div>
-    </div>
-    
-    <div id="main-wrapper">
-        <div class="progress-container">
-            <div class="container mx-auto px-4 md:px-6 max-w-7xl">
-                <div class="flex justify-between items-center mb-2"><p class="text-sm font-semibold">Progresso: <span id="progress-text">0%</span></p><span class="text-sm font-semibold"><span id="completed-modules-count">0</span>/<span id="total-modules">0</span> módulos</span></div>
-                <div class="w-full bg-gray-200 rounded-full"><div id="progress-bar" class="progress-bar" style="width: 0%"></div></div>
-            </div>
-        </div>
-        <header class="header-gradient text-white py-6 shadow-lg">
-            <div class="container mx-auto px-4 md:px-6 max-w-7xl flex justify-between items-center">
-                <div class="flex items-center">
-                    <div class="bg-white p-2 md:p-3 rounded-full mr-3 md:mr-5 shadow-md"><i class="fas fa-shield-alt text-2xl md:text-3xl text-red-600"></i></div>
-                    <div><h1 class="text-2xl md:text-4xl font-bold">Formação Profissional</h1><p class="text-blue-100 text-sm md:text-lg">Bombeiro Civil e Brigadista</p></div>
-                </div>
-                <div class="hidden lg:flex items-center space-x-6">
-                    <button id="home-button-desktop" title="Voltar ao Início" class="text-white text-2xl hover:text-orange-300 transition-colors"><i class="fas fa-home"></i></button>
-                    <div class="bg-white bg-opacity-20 py-2 px-4 rounded-full text-sm font-semibold"><i class="fas fa-book-open mr-2"></i><span id="course-modules-count">...</span> Módulos</div>
-                    <button id="dark-mode-toggle-desktop" class="text-2xl text-white hover:text-orange-300 transition-colors"><i class="fas fa-moon"></i></button>
-                </div>
-                <div class="lg:hidden"><button id="mobile-menu-button" class="text-white text-3xl"><i class="fas fa-bars"></i></button></div>
-            </div>
-        </header>
-        <div class="container mx-auto px-4 md:px-6 py-10 flex flex-col lg:flex-row gap-8">
-            <aside class="w-full lg:w-1/3 hidden lg:block">
-                <div class="sidebar sticky top-24 max-h-[calc(100vh-7.5rem)] overflow-y-auto">
-                    <div id="desktop-module-container"></div>
-                </div>
-            </aside>
-            <div class="w-full lg:w-2/3">
-                 <div class="mb-8 p-4 bg-white dark:bg-gray-800 rounded-lg shadow">
-                    <h2 id="welcome-greeting" class="text-2xl font-bold text-secondary dark:text-white">Carregando...</h2>
-                    <p class="text-gray-600 dark:text-gray-300">Continue de onde parou ou explore um novo módulo.</p>
-                </div>
-                <main>
-                    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden border border-gray-200 dark:border-gray-700">
-                        <div id="content-area" class="content-transition p-6 md:p-10"></div>
-                        <div id="module-nav" class="module-nav hidden"><div class="flex justify-between"><button id="prev-module" class="action-button" disabled><i class="fas fa-arrow-left mr-2"></i> Anterior</button><button id="next-module" class="action-button">Próximo <i class="fas fa-arrow-right ml-2"></i></button></div></div>
-                    </div>
-                </main>
-            </div>
-        </div>
-        <div id="congratulations-modal" class="congratulations-modal"><div class="floating inline-block p-4 bg-yellow-100 rounded-full mb-4"><i class="fas fa-trophy text-4xl text-yellow-600"></i></div><h2 class="text-3xl font-bold mb-2">Parabéns!</h2><p class="text-lg mb-6 text-gray-600 dark:text-gray-300">Você concluiu o curso com sucesso!</p><button id="close-congrats" class="action-button" style="background: var(--secondary);"><i class="fas fa-times mr-2"></i> Fechar</button></div>
-        <div id="modal-overlay" class="modal-overlay"></div>
+        <div id="name-modal-overlay" class="modal-overlay"></div>
+
         <footer class="bg-gray-800 dark:bg-black text-white py-10 mt-12">
             <div class="container mx-auto px-4 md:px-6 max-w-7xl">
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
@@ -558,6 +392,9 @@ moduleContent['module45'] = { id: "module45", title: "45. Introdução ao Salvam
 
         moduleContent['module54'] = { id: "module54", title: "54. Técnicas de Resgate", iconClass: "fas fa-people-carry", content: `<h4>Técnicas de Resgate Simples, Complexo e Auto-Resgate</h4><p>Este módulo aborda as técnicas de resgate em alturas, divididas em três categorias, cada uma com equipamentos e procedimentos específicos:</p><h5>Resgate Simples:</h5><p>Para vítimas com lesões leves, realizado por um bombeiro. Equipamentos mínimos incluem:</p><ul><li><strong>Individuais:</strong> Cinto paraquedista, capacete, 4 mosquetões de aço, 2 de alumínio (com e sem trava), blocantes, freio oito, cordeletes, luvas, óculos e cantil.</li><li><strong>Coletivos:</strong> Cabos solteiros, lanternas, coletes refletivos, fitas zebradas, cones, binóculos, croque, maca flexível, kit de primeiros socorros, cordas estáticas, triângulo de evacuação, descensores (Rack, Stop) e roldanas.</li></ul><h5>Resgate Complexo:</h5><p>Para vítimas com lesões graves (fraturas, hemorragias, traumatismos), exigindo equipe de pelo menos quatro bombeiros. Inclui:</p><ul><li><strong>Técnicas de içamento:</strong> Usam sistemas 3:1 com roldanas e blocantes para reduzir o peso da vítima a um terço, ideais para depressões naturais ou estruturas urbanas.</li><li><strong>Técnicas de descensão:</strong> Com macas (duas cordas: principal e de segurança) ou triângulos de evacuação. Socorristas podem acompanhar a maca em terrenos acidentados, ou usar cabo-guia para evitar obstáculos.</li></ul><h5>Auto-Resgate:</h5><p>Técnicas realizadas por um socorrista sem apoio, como:</p><ul><li><strong>Corte no cabo da vítima:</strong> Socorrista na ancoragem ou descendo até a vítima, usando novo cabo de resgate e nós blocantes (prússico, machard).</li><li><strong>Preservando o cabo da vítima:</strong> Usando valdotan ou blocantes, acessando por cima ou por baixo, com procedimentos como clipagem de longes e uso de estribos.</li><li><strong>Transposição de nó:</strong> Para subir ou descer em cabos emendados, usando blocantes e longes para passar pelo nó.</li></ul><hr><h3 class="text-xl font-semibold mb-4 text-gray-800">Exercícios de Fixação</h3><p class="font-semibold mb-2 text-gray-700">1. O que diferencia o resgate simples do complexo?</p><div class="quiz-options-group space-y-2 mb-4"><div class="quiz-option" data-question="module54-q1" data-answer="a">a) O simples é sempre mais rápido que o complexo.</div><div class="quiz-option" data-question="module54-q1" data-answer="b">b) O simples é para lesões leves (um bombeiro); o complexo é para lesões graves (exige equipe e macas).</div><div class="quiz-option" data-question="module54-q1" data-answer="c">c) O simples não usa cordas, o complexo sim.</div><div class="quiz-option" data-question="module54-q1" data-answer="d">d) Não há diferença, a escolha é aleatória.</div></div><p id="explanation-module54-q1" class="explanation hidden"></p><p class="font-semibold mt-4 mb-2 text-gray-700">2. Como funciona o sistema de içamento 3:1?</p><div class="quiz-options-group space-y-2 mb-4"><div class="quiz-option" data-question="module54-q2" data-answer="a">a) Triplica o peso da vítima, exigindo três bombeiros para puxar.</div><div class="quiz-option" data-question="module54-q2" data-answer="b">b) Usa três cordas separadas para segurança.</div><div class="quiz-option" data-question="module54-q2" data-answer="c">c) Usa roldanas móveis para reduzir o peso da vítima a um terço, facilitando o içamento.</div><div class="quiz-option" data-question="module54-q2" data-answer="d">d) É um sistema de descida controlada.</div></div><p id="explanation-module54-q2" class="explanation hidden"></p><p class="font-semibold mt-4 mb-2 text-gray-700">3. Qual é a função do nó valdotan no auto-resgate?</p><div class="quiz-options-group space-y-2 mb-4"><div class="quiz-option" data-question="module54-q3" data-answer="a">a) Permite descida controlada no mesmo cabo da vítima, conectando-a ao socorrista.</div><div class="quiz-option" data-question="module54-q3" data-answer="b">b) Serve para cortar o cabo da vítima com segurança.</div><div class="quiz-option" data-question="module54-q3" data-answer="c">c) É usado para unir duas cordas durante uma subida.</div><div class="quiz-option" data-question="module54-q3" data-answer="d">d) Bloqueia a corda para o socorrista descansar.</div></div><p id="explanation-module54-q3" class="explanation hidden"></p><p class="font-semibold mt-4 mb-2 text-gray-700">4. Por que a descida com maca usa duas cordas?</p><div class="quiz-options-group space-y-2"><div class="quiz-option" data-question="module54-q4" data-answer="a">a) Para ser duas vezes mais rápida.</div><div class="quiz-option" data-question="module54-q4" data-answer="b">b) Uma para a vítima e outra para os equipamentos.</div><div class="quiz-option" data-question="module54-q4" data-answer="c">c) Para que dois bombeiros possam descer ao mesmo tempo.</div><div class="quiz-option" data-question="module54-q4" data-answer="d">d) Uma corda principal e uma de segurança garantem redundância e controle.</div></div><p id="explanation-module54-q4" class="explanation hidden"></p>` };
 
+        // ===============================================
+        // ==  INICIALIZAÇÃO E CONTROLE (Ajustado para 54 módulos) ==
+        
 
         if (typeof moduleContent === 'undefined' || typeof correctAnswers === 'undefined') { document.body.innerHTML = '<div style="font-family: sans-serif; text-align: center; padding: 40px; color: #1a202c;"><h1>Erro de Configuração</h1><p>O conteúdo do curso (variáveis <strong>moduleContent</strong> e <strong>correctAnswers</strong>) não foi encontrado. Por favor, siga as instruções e cole o conteúdo dos módulos dentro da tag &lt;script&gt;.</p></div>'; return; }
         for (const moduleId in moduleContent) { if (moduleContent.hasOwnProperty(moduleId)) { moduleContent[moduleId].content += `<div class="mt-8 pt-6 border-t border-gray-200 dark:border-gray-700 text-right"><button class="action-button conclude-button" data-module="${moduleId}">Concluir Módulo</button></div>`; } }
@@ -572,9 +409,9 @@ moduleContent['module45'] = { id: "module45", title: "45. Introdução ao Salvam
         function getWelcomeContent() { 
             return `<div class="text-center py-8">
                         <div class="floating inline-block p-5 bg-red-100 dark:bg-red-900/50 rounded-full mb-6"><i class="fas fa-fire-extinguisher text-6xl text-red-600"></i></div>
-                        <h2 class="text-4xl font-bold mb-4 text-[var(--secondary)] dark:text-white">Torne-se um Profissional de Elite</h2>
+                        <h2 class="text-4xl font-bold mb-4 text-blue-900 dark:text-white">Torne-se um Profissional de Elite</h2>
                         <p class="text-lg text-gray-600 dark:text-gray-300 max-w-3xl mx-auto mb-8">
-                            Bem-vindo ao <strong class="font-bold text-[var(--accent)] dark:text-[var(--accent)]">Curso de Formação para Bombeiro Civil e Brigadista</strong>.
+                            Bem-vindo ao <strong class="font-bold text-orange-500 dark:text-orange-400">Curso de Formação para Bombeiro Civil e Brigadista</strong>.
                         </p>
                         <button id="start-course" class="action-button pulse text-lg"><i class="fas fa-play-circle mr-2"></i> Iniciar Curso Agora</button>
                     </div>`; 
@@ -584,7 +421,7 @@ moduleContent['module45'] = { id: "module45", title: "45. Introdução ao Salvam
         
         // CORREÇÃO 2: Título "Conteúdo do Curso" em AZUL e 7 Conquistas
         function getModuleListHTML() {
-            let html = `<h2 class="text-2xl font-semibold mb-5 flex items-center text-[var(--secondary)] dark:text-white"><i class="fas fa-list-ul mr-3 text-orange-500"></i> Conteúdo do Curso</h2>
+            let html = `<h2 class="text-2xl font-semibold mb-5 flex items-center text-blue-900 dark:text-white"><i class="fas fa-list-ul mr-3 text-orange-500"></i> Conteúdo do Curso</h2>
                         <div class="mb-4 relative"><input type="text" class="module-search w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 bg-gray-50 dark:bg-gray-700" placeholder="Buscar módulo..."><i class="fas fa-search absolute right-3 top-3.5 text-gray-400"></i></div>
                         <div class="module-accordion-container space-y-2">`;
             for (const k in moduleCategories) { const cat = moduleCategories[k]; html += `<div><button class="accordion-button"><span><i class="${cat.icon} w-6 mr-2 text-gray-500"></i>${cat.title}</span><i class="fas fa-chevron-down"></i></button><div class="accordion-panel">`; for (let i = cat.range[0]; i <= cat.range[1]; i++) { const m = moduleContent[`module${i}`]; if (m) { html += `<div class="module-list-item" data-module="${m.id}"><i class="${m.iconClass} module-icon"></i><span>${m.title}</span><i class="fas fa-check-circle"></i></div>`; } } html += `</div></div>`; }
@@ -619,107 +456,39 @@ moduleContent['module45'] = { id: "module45", title: "45. Introdução ao Salvam
         }
         // ***** FIM DA CORREÇÃO DO BUG *****
 
-        // ***** CORREÇÃO DO BUG DE PERSONALIZAÇÃO *****
+        // ***** CORREÇÃO: MODAL DE NOME *****
         function handlePersonalGreeting() {
+            const nameModal = document.getElementById('name-prompt-modal');
+            const nameOverlay = document.getElementById('name-modal-overlay');
+            const saveButton = document.getElementById('save-name-button');
+            const nameInput = document.getElementById('name-input');
+            const greetingEl = document.getElementById('welcome-greeting');
+
             let studentName = localStorage.getItem('studentName');
+
             if (!studentName) {
-                studentName = prompt("Olá! Para uma experiência mais pessoal, qual é o seu nome?");
-                if (studentName) {
+                // Se não tem nome, mostra o modal
+                nameModal.classList.add('show');
+                nameOverlay.classList.add('show');
+                nameInput.focus();
+
+                saveButton.onclick = () => {
+                    studentName = nameInput.value || "Aluno(a)";
                     localStorage.setItem('studentName', studentName);
-                }
-            }
-            document.getElementById('welcome-greeting').textContent = `Olá, ${studentName || "Aluno(a)"}!`;
-        }
-        // ***** FIM DA CORREÇÃO *****
+                    greetingEl.textContent = `Olá, ${studentName}!`;
+                    nameModal.classList.remove('show');
+                    nameOverlay.classList.remove('show');
+                };
+                nameInput.onkeydown = (e) => {
+                    if (e.key === 'Enter') {
+                        saveButton.click();
+                    }
+                };
 
-        function updateThemeIcons() { const isDark = document.documentElement.classList.contains('dark'); const icon = isDark ? 'fa-sun' : 'fa-moon'; document.querySelectorAll('#dark-mode-toggle-desktop i, #bottom-nav-theme i').forEach(i => { i.className = `fas ${icon} text-2xl`; }); }
-        function openSidebar() { sidebar.classList.add('open'); sidebarOverlay.classList.remove('hidden'); setTimeout(() => sidebarOverlay.classList.add('show'), 10); }
-        function closeSidebar() { sidebar.classList.remove('open'); sidebarOverlay.classList.remove('show'); setTimeout(() => sidebarOverlay.classList.add('hidden'), 300); }
-        function addEventListeners() { document.body.addEventListener('click', e => { if (e.target.closest('.module-list-item')) { loadModuleContent(e.target.closest('.module-list-item').dataset.module); } if (e.target.closest('.accordion-button')) { const b = e.target.closest('.accordion-button'); const p = b.nextElementSibling; const a = b.classList.contains('active'); const allPanels = b.closest('.module-accordion-container, .sidebar, #mobile-module-container').querySelectorAll('.accordion-panel'); allPanels.forEach(op => { if (op !== p) { op.style.maxHeight = null; op.previousElementSibling.classList.remove('active'); }}); if (!a) { b.classList.add('active'); p.style.maxHeight = p.scrollHeight + "px"; } else { b.classList.remove('active'); p.style.maxHeight = null; } } }); document.getElementById('prev-module').addEventListener('click', () => { const n = parseInt(currentModuleId.replace('module','')); if(n > 1) loadModuleContent(`module${n-1}`); }); document.getElementById('next-module').addEventListener('click', () => { const n = parseInt(currentModuleId.replace('module','')); if(n < totalModules) loadModuleContent(`module${n+1}`); }); document.getElementById('mobile-menu-button').addEventListener('click', openSidebar); document.getElementById('close-sidebar-button').addEventListener('click', closeSidebar); sidebarOverlay.addEventListener('click', closeSidebar); document.getElementById('home-button-desktop').addEventListener('click', goToHomePage); document.getElementById('bottom-nav-home').addEventListener('click', goToHomePage); document.getElementById('bottom-nav-modules').addEventListener('click', openSidebar); document.getElementById('bottom-nav-theme').addEventListener('click', toggleTheme); document.body.addEventListener('input', e => { if(e.target.matches('.module-search')) { const s = e.target.value.toLowerCase(); e.target.closest('div').nextElementSibling.querySelectorAll('.module-list-item').forEach(i => { i.style.display = i.textContent.toLowerCase().includes(s) ? 'flex' : 'none'; }); }}); document.getElementById('dark-mode-toggle-desktop').addEventListener('click', toggleTheme); document.getElementById('close-congrats').addEventListener('click', hideCongratulations); document.getElementById('modal-overlay').addEventListener('click', hideCongratulations); }
-        function setupQuizListeners() { document.querySelectorAll('.quiz-option').forEach(o => o.addEventListener('click', handleQuizOptionClick)); }
-        function setupConcludeButtonListener() { const b = document.querySelector(`.conclude-button[data-module="${currentModuleId}"]`); if(b) { if(completedModules.includes(currentModuleId)){b.disabled=true; b.innerHTML='<i class="fas fa-check-circle mr-2"></i> Concluído';} b.addEventListener('click', ()=>handleConcludeButtonClick(b)); } }
-        function updateModuleListStyles() { document.querySelectorAll('.module-list-item').forEach(i => i.classList.toggle('completed', completedModules.includes(i.dataset.module))); }
-        function updateActiveModuleInList() { document.querySelectorAll('.module-list-item').forEach(i => i.classList.toggle('active', i.dataset.module === currentModuleId)); }
-        function updateNavigationButtons() { const n = parseInt(currentModuleId.replace('module','')); document.getElementById('prev-module').disabled=(n===1); document.getElementById('next-module').disabled=(n===totalModules); }
-        function checkAchievements() { for(const key in moduleCategories) { const cat = moduleCategories[key]; document.querySelectorAll(`#ach-cat-${key}`).forEach(el => { if (el) { let allComplete = true; for(let i = cat.range[0]; i <= cat.range[1]; i++) { if (!moduleContent[`module${i}`] || !completedModules.includes(`module${i}`)) { allComplete = false; break; } } el.classList.toggle('unlocked', allComplete); } }); } }
-        function showCongratulations() { document.getElementById('congratulations-modal').classList.add('show'); document.getElementById('modal-overlay').classList.add('show'); if(typeof confetti==='function'){confetti({particleCount:150, spread:90, origin:{y:0.6},zIndex:200});}}
-        function hideCongratulations() { document.getElementById('congratulations-modal').classList.remove('show'); document.getElementById('modal-overlay').classList.remove('show'); }
-        init();
-    });
-    </script>
-</body>
-</html>
-
-        if (typeof moduleContent === 'undefined' || typeof correctAnswers === 'undefined') { document.body.innerHTML = '<div style="font-family: sans-serif; text-align: center; padding: 40px; color: #1a202c;"><h1>Erro de Configuração</h1><p>O conteúdo do curso (variáveis <strong>moduleContent</strong> e <strong>correctAnswers</strong>) não foi encontrado. Por favor, siga as instruções e cole o conteúdo dos módulos dentro da tag &lt;script&gt;.</p></div>'; return; }
-        for (const moduleId in moduleContent) { if (moduleContent.hasOwnProperty(moduleId)) { moduleContent[moduleId].content += `<div class="mt-8 pt-6 border-t border-gray-200 dark:border-gray-700 text-right"><button class="action-button conclude-button" data-module="${moduleId}">Concluir Módulo</button></div>`; } }
-        const totalModules = Object.keys(moduleContent).length;
-        let completedModules = JSON.parse(localStorage.getItem('gateBombeiroCompletedModules_v3')) || [];
-        let currentModuleId = null;
-        const moduleCategories = { rh: { title: "Relações Humanas", range: [1, 5], icon: "fas fa-users" }, legislacao: { title: "Legislação Aplicada", range: [6, 9], icon: "fas fa-gavel" }, salvamento: { title: "Salvamento", range: [10, 14], icon: "fas fa-life-ring" }, pci: { title: "Prevenção e Combate a Incêndio", range: [15, 20], icon: "fas fa-fire-extinguisher" }, aph: { title: "Primeiros Socorros", range: [21, 32], icon: "fas fa-briefcase-medical" }, phtls: { title: "APH - PHTLS", range: [33, 44], icon: "fas fa-star-of-life" }, nr35: { title: "NR 35 - Trabalho em Altura", range: [45, 54], icon: "fas fa-hard-hat" } };
-        const contentArea = document.getElementById('content-area'); const sidebar = document.getElementById('off-canvas-sidebar'); const sidebarOverlay = document.getElementById('sidebar-overlay'); const toastContainer = document.getElementById('toast-container');
-        function init() { setupTheme(); handlePersonalGreeting(); document.getElementById('total-modules').textContent = totalModules; document.getElementById('course-modules-count').textContent = totalModules; populateModuleLists(); updateProgress(); addEventListeners(); goToHomePage(); }
-        
-        // CORREÇÃO 1: Cores do H2 (AZUL) e Strong (LARANJA) no tema claro
-        function getWelcomeContent() { 
-            return `<div class="text-center py-8">
-                        <div class="floating inline-block p-5 bg-red-100 dark:bg-red-900/50 rounded-full mb-6"><i class="fas fa-fire-extinguisher text-6xl text-red-600"></i></div>
-                        <h2 class="text-4xl font-bold mb-4 text-[var(--secondary)] dark:text-white">Torne-se um Profissional de Elite</h2>
-                        <p class="text-lg text-gray-600 dark:text-gray-300 max-w-3xl mx-auto mb-8">
-                            Bem-vindo ao <strong class="font-bold text-[var(--accent)] dark:text-[var(--accent)]">Curso de Formação para Bombeiro Civil e Brigadista</strong>.
-                        </p>
-                        <button id="start-course" class="action-button pulse text-lg"><i class="fas fa-play-circle mr-2"></i> Iniciar Curso Agora</button>
-                    </div>`; 
-        }
-
-        function goToHomePage() { contentArea.innerHTML = getWelcomeContent(); document.getElementById('module-nav').classList.add('hidden'); document.querySelectorAll('.module-list-item.active').forEach(i => i.classList.remove('active')); currentModuleId = null; closeSidebar(); document.getElementById('start-course').addEventListener('click', () => { loadModuleContent('module1'); const p = document.querySelector('#desktop-module-container .accordion-panel'); if(p) { p.style.maxHeight = p.scrollHeight + "px"; p.previousElementSibling.classList.add('active'); }}); }
-        
-        // CORREÇÃO 2: Título "Conteúdo do Curso" em AZUL e 7 Conquistas
-        function getModuleListHTML() {
-            let html = `<h2 class="text-2xl font-semibold mb-5 flex items-center text-[var(--secondary)] dark:text-white"><i class="fas fa-list-ul mr-3 text-orange-500"></i> Conteúdo do Curso</h2>
-                        <div class="mb-4 relative"><input type="text" class="module-search w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 bg-gray-50 dark:bg-gray-700" placeholder="Buscar módulo..."><i class="fas fa-search absolute right-3 top-3.5 text-gray-400"></i></div>
-                        <div class="module-accordion-container space-y-2">`;
-            for (const k in moduleCategories) { const cat = moduleCategories[k]; html += `<div><button class="accordion-button"><span><i class="${cat.icon} w-6 mr-2 text-gray-500"></i>${cat.title}</span><i class="fas fa-chevron-down"></i></button><div class="accordion-panel">`; for (let i = cat.range[0]; i <= cat.range[1]; i++) { const m = moduleContent[`module${i}`]; if (m) { html += `<div class="module-list-item" data-module="${m.id}"><i class="${m.iconClass} module-icon"></i><span>${m.title}</span><i class="fas fa-check-circle"></i></div>`; } } html += `</div></div>`; }
-            html += `</div>`;
-            html += `<div class="mt-6 pt-6 border-t border-gray-200 dark:border-gray-700"><h3 class="text-xl font-semibold mb-4 text-gray-800 dark:text-white">Conquistas por Área</h3><div id="achievements-grid" class="grid grid-cols-2 gap-4">`;
-            for (const key in moduleCategories) { const cat = moduleCategories[key]; html += `<div id="ach-cat-${key}" class="achievement" title="Conclua a área de ${cat.title}"><div class="achievement-icon"><i class="${cat.icon}"></i></div><p class="text-sm font-bold text-gray-700 dark:text-gray-300">${cat.title}</p></div>`; }
-            html += `</div></div>`;
-            return html;
-        }
-
-        function populateModuleLists() { document.getElementById('desktop-module-container').innerHTML = getModuleListHTML(); document.getElementById('mobile-module-container').innerHTML = getModuleListHTML(); }
-        function loadModuleContent(id) { if (!id || !moduleContent[id]) return; currentModuleId = id; const d = moduleContent[id]; contentArea.classList.add('fade'); setTimeout(() => { contentArea.innerHTML = `<h3 class="flex items-center text-3xl mb-6 pb-4 border-b"><i class="${d.iconClass} mr-4 text-orange-500 fa-fw"></i>${d.title}</h3><div>${d.content}</div>`; setupQuizListeners(); setupConcludeButtonListener(); contentArea.classList.remove('fade'); document.querySelector('main')?.scrollIntoView({ behavior: 'smooth' }); }, 300); updateActiveModuleInList(); updateNavigationButtons(); document.getElementById('module-nav').classList.remove('hidden'); closeSidebar(); }
-        function handleQuizOptionClick(e) { const o = e.currentTarget; if (o.disabled) return; const q = o.dataset.question; const s = o.dataset.answer; const a = correctAnswers[q]; const p = document.getElementById(`explanation-${q}`); const g = o.closest('.quiz-options-group'); g.querySelectorAll(`.quiz-option[data-question="${q}"]`).forEach(opt => { opt.disabled = true; if(opt.dataset.answer===a) opt.classList.add('correct');}); if (s===a) { o.classList.add('correct'); if(p) { p.innerHTML=`<strong class="font-semibold">Correto!</strong>`; p.classList.remove('hidden');}} else { o.classList.add('incorrect'); if(p) { p.innerHTML=`<strong class="font-semibold">Incorreto.</strong> A resposta correta foi destacada.`; p.classList.remove('hidden');}}}
-        function handleConcludeButtonClick(b) { const id = b.dataset.module; if (id && !completedModules.includes(id)) { completedModules.push(id); localStorage.setItem('gateBombeiroCompletedModules_v3', JSON.stringify(completedModules)); updateProgress(); b.disabled = true; b.innerHTML = '<i class="fas fa-check-circle mr-2"></i> Concluído'; showAchievementToast(moduleContent[id].title); confetti({ particleCount: 60, spread: 70, origin: { y: 0.6 }, zIndex: 2000 }); } }
-        function showAchievementToast(moduleTitle) { const toast = document.createElement('div'); toast.className = 'toast'; toast.innerHTML = `<i class="fas fa-trophy"></i><div><p class="font-bold">Módulo Concluído!</p><p class="text-sm">${moduleTitle}</p></div>`; toastContainer.appendChild(toast); setTimeout(() => { toast.remove(); }, 4500); }
-        function updateProgress() { const p = (completedModules.length / totalModules) * 100; document.getElementById('progress-text').textContent = `${p.toFixed(0)}%`; document.getElementById('progress-bar').style.width = `${p}%`; document.getElementById('completed-modules-count').textContent = completedModules.length; updateModuleListStyles(); checkAchievements(); }
-        
-        // ***** CORREÇÃO DO BUG DO TEMA *****
-        function setupTheme() {
-            const isDark = localStorage.getItem('theme') === 'dark' || (localStorage.getItem('theme') === null && window.matchMedia('(prefers-color-scheme: dark)').matches);
-            if (isDark) {
-                document.documentElement.classList.add('dark');
             } else {
-                document.documentElement.classList.remove('dark'); // Garante que o tema claro seja aplicado
+                // Se já tem nome, apenas exibe
+                greetingEl.textContent = `Olá, ${studentName}!`;
             }
-            updateThemeIcons();
-        }
-        function toggleTheme() {
-            const isDark = document.documentElement.classList.toggle('dark');
-            localStorage.setItem('theme', isDark ? 'dark' : 'light');
-            updateThemeIcons();
-        }
-        // ***** FIM DA CORREÇÃO DO BUG *****
-
-        // ***** CORREÇÃO DO BUG DE PERSONALIZAÇÃO *****
-        function handlePersonalGreeting() {
-            let studentName = localStorage.getItem('studentName');
-            if (!studentName) {
-                studentName = prompt("Olá! Para uma experiência mais pessoal, qual é o seu nome?");
-                if (studentName) {
-                    localStorage.setItem('studentName', studentName);
-                }
-            }
-            document.getElementById('welcome-greeting').textContent = `Olá, ${studentName || "Aluno(a)"}!`;
         }
         // ***** FIM DA CORREÇÃO *****
 
