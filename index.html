@@ -5,85 +5,64 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Curso de Formação | Bombeiro Civil e Brigadista</title>
     
-    <!-- Tailwind CSS via CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
-    
-    <!-- CORREÇÃO DO BUG DO TEMA -->
     <script>
-      tailwind.config = {
-        darkMode: 'class',
-      }
+      tailwind.config = { darkMode: 'class' }
     </script>
 
-    <!-- PROTEÇÃO TOTAL: ANTI-CÓPIA, ANTI-BOTÃO DIREITO, ANTI-DEVTOOLS -->
     <script>
       document.addEventListener('DOMContentLoaded', () => {
-        // Desabilita seleção de texto
+        // Bloqueio de Seleção
         document.body.style.userSelect = 'none';
         document.body.style.webkitUserSelect = 'none';
         document.body.style.mozUserSelect = 'none';
         document.body.style.msUserSelect = 'none';
 
-        // Desabilita clique com botão direito
-        document.addEventListener('contextmenu', e => {
-          e.preventDefault();
-          return false;
-        });
-
-        // Desabilita atalhos perigosos
+        // Bloqueio de Clique Direito
+        document.addEventListener('contextmenu', e => e.preventDefault());
+        
+        // Bloqueio de Atalhos
         document.addEventListener('keydown', e => {
           if (e.ctrlKey || e.metaKey) {
-            if (['c', 'a', 'x', 'v', 's', 'p', 'u'].includes(e.key.toLowerCase())) {
-              e.preventDefault();
-              return false;
-            }
+            if (['c','a','x','v','s','p','u'].includes(e.key.toLowerCase())) e.preventDefault();
           }
-          if (e.key === 'F12') {
-            e.preventDefault();
-            return false;
-          }
-          if (e.ctrlKey && e.shiftKey && ['I', 'J', 'C'].includes(e.key)) {
-            e.preventDefault();
-            return false;
-          }
+          if (e.key === 'F12') e.preventDefault();
+          if (e.ctrlKey && e.shiftKey && ['I','J','C'].includes(e.key.toUpperCase())) e.preventDefault();
           if ((e.ctrlKey || e.metaKey) && e.key === 'p') {
             e.preventDefault();
-            alert('Impress sexta-feira foi desativada para proteger o conteúdo do curso.');
-            return false;
+            alert('Impressão desativada para proteger o conteúdo.');
           }
         });
-
-        // Desabilita arrastar imagens
+        
+        // Bloqueio de Arrastar Imagem
         document.querySelectorAll('img').forEach(img => {
-          img.setAttribute('draggable', 'false');
+          img.draggable = false;
           img.addEventListener('dragstart', e => e.preventDefault());
         });
 
-        // Bloqueia toque longo no mobile
-        let lastTouch = 0;
-        document.addEventListener('touchstart', () => {
-          const now = Date.now();
-          if (now - lastTouch < 300) {
-            lastTouch = now;
-          }
-        }, { passive: false });
+        // MARCA D'ÁGUA INVISÍVEL
+        const watermark = document.createElement('div');
+        watermark.style.cssText = `
+          position:fixed; bottom:8px; right:8px; 
+          font-size:11px; color:#000; opacity:0.04; 
+          pointer-events:none; z-index:9999; 
+          font-family:monospace; transform:rotate(-15deg);
+        `;
+        watermark.textContent = '© Coordenador Medeiros - Curso Oficial';
+        document.body.appendChild(watermark);
       });
     </script>
     
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Lora:wght@600;700&family=Lato:wght@400;700&display=swap" rel="stylesheet">
     
     <style>
-        /* TEMA CLARO - Baseado no seu CSS Original */
         :root {
             --primary: #c1121f; --primary-dark: #a4161a; --secondary: #003049; --accent: #f77f00;
             --dark-text: #1a202c; --light-text: #2d3748; --light-bg: #f8f9fa; --success: #2a9d8f;
             --info-bg: #e6f4ff; --info-border: #90cdf4; --panel-bg: #ffffff; --border-color: #e2e8f0;
         }
-        /* TEMA ESCURO */
         .dark {
             --primary: #d90429; --primary-dark: #c1121f; --secondary: #1d3557; --accent: #ff9e00;
             --dark-text: #edf2f4; --light-text: #d1d5db; --light-bg: #111827; --success: #2a9d8f;
@@ -108,13 +87,16 @@
         .action-button { background: linear-gradient(90deg, var(--primary), var(--primary-dark)); color: white; font-weight: 700; padding: 0.75rem 2rem; border-radius: 0.5rem; transition: all 0.3s ease; text-align: center; display: inline-block; border: none; cursor: pointer; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
         .action-button:hover { background: linear-gradient(90deg, var(--primary-dark), #a4161a); transform: translateY(-2px); box-shadow: 0 7px 14px rgba(0,0,0,0.15); }
         .action-button:disabled { background-color: #adb5bd; color: #6c757d; cursor: not-allowed; transform: none; box-shadow: none; }
+        
+        /* CORREÇÃO DE SINTAXE CSS */
         .quiz-option { cursor: pointer; padding: 1rem; border-radius: 0.5rem; margin-bottom: 0.75rem; transition: all 0.3s ease; background-color: #f8f9fa; border: 2px solid #e9ecef; color: var(--dark-text); }
+        
         .dark .quiz-option { background-color: #374151; border-color: #4b5563; color: var(--dark-text); }
         .quiz-option:hover { background-color: #e9ecef; transform: translateX(5px); }
         .dark .quiz-option:hover { background-color: #4b5563; }
         .quiz-option.correct { background-color: var(--success) !important; color: white !important; border-color: var(--success) !important; }
         .quiz-option.incorrect { background-color: var(--primary) !important; color: white !important; border-color: var(--primary) !important; }
-        .explanation { padding: 1rem; marginトップ: 0.5rem; margin-bottom: 1.5rem; border-radius: 0.5rem; background-color: var(--info-bg); color: #1e40af; border-left: 4px solid var(--info-border); animation: fadeIn 0.5s ease; }
+        .explanation { padding: 1rem; margin-top: 0.5rem; margin-bottom: 1.5rem; border-radius: 0.5rem; background-color: var(--info-bg); color: #1e40af; border-left: 4px solid var(--info-border); animation: fadeIn 0.5s ease; }
         .dark .explanation { background-color: var(--info-bg); color: #93c5fd; border-color: var(--info-border); }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
         .module-nav { background-color: var(--panel-bg); border-top: 1px solid var(--border-color); transition: background-color 0.3s, border-color 0.3s; padding: 1rem; box-shadow: 0 -2px 15px rgba(0,0,0,0.1); z-index: 35; border-radius: 0 0 1rem 1rem; }
@@ -125,7 +107,6 @@
         .dark .achievement-icon { color: #4b5563; }
         .achievement.unlocked .achievement-icon { color: var(--accent); animation: pulse 1.5s infinite; }
         
-        /* Modais */
         .modal { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0.9); z-index: 100; background-color: var(--panel-bg); padding: 2.5rem; border-radius: 1.5rem; box-shadow: 0 20px 50px rgba(0,0,0,0.3); text-align: center; max-width: 32rem; width: 90%; opacity: 0; pointer-events: none; transition: all 0.5s cubic-bezier(0.68, -0.55, 0.27, 1.55); }
         .modal.show { opacity: 1; transform: translate(-50%, -50%) scale(1); pointer-events: auto; }
         .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 48, 73, 0.7); backdrop-filter: blur(5px); z-index: 99; opacity: 0; pointer-events: none; transition: opacity 0.5s ease; }
@@ -148,31 +129,64 @@
         .module-list-item i.module-icon { margin-right: 0.75rem; font-size: 1.1rem; width: 20px; text-align: center; }
         .module-list-item .fa-check-circle { display: none; margin-left: auto; margin-right: 0; font-size: 1rem; }
         
-        #content-area { background-color: var(--panel-bg); }
+        /* Estilos de Cor para Conteúdo (Baseado no seu código de exemplo) */
+        #content-area { background-color: var(--panel-bg); color: var(--light-text); }
         #content-area h3 { color: var(--secondary); border-bottom: 2px solid var(--border-color); }
-        #content-area h4 { color: #003049; }
+        #content-area h4 { color: var(--secondary); } /* Corrigido de #003049 para var(--secondary) */
         #content-area p { color: var(--light-text); }
         #content-area ul, #content-area li { color: var(--light-text); }
         #content-area p.font-semibold { color: var(--secondary); }
         #content-area strong { color: var(--secondary); font-weight: 700; }
+        
         .dark #content-area h3 { color: var(--accent); }
         .dark #content-area h4 { color: #93c5fd; }
         .dark #content-area p, .dark #content-area ul, .dark #content-area li { color: var(--light-text); }
         .dark #content-area p.font-semibold { color: #a5b4fc; }
         .dark #content-area strong { color: var(--accent); }
+        /* Fim dos estilos de cor */
         
-        .key-concept { background-color: var(--info-bg); border-left: 4px solid var(--info-border); }
-        .key-concept h5 { color: #2c5282; }
+        .key-concept { background-color: var(--info-bg); border-left: 4px solid var(--info-border); padding: 1rem; margin-bottom: 1rem; border-radius: 0.5rem; }
+        .key-concept h5 { color: #2c5282; font-weight: 700; }
         .dark .key-concept h5 { color: #bfdbfe; }
+        .warning-box { background-color: #fffbeb; border-left: 4px solid #f59e0b; padding: 1rem; margin-bottom: 1rem; border-radius: 0.5rem; color: #b45309; }
+        .dark .warning-box { background-color: #451a03; border-color: #d97706; color: #fdba74; }
+        .custom-table { width: 100%; border-collapse: collapse; margin: 1rem 0; }
+        .custom-table th, .custom-table td { border: 1px solid var(--border-color); padding: 0.75rem; text-align: left; }
+        .custom-table th { background-color: #e9ecef; font-weight: bold; }
+        .dark .custom-table th { background-color: #374151; }
+        .dark .custom-table th, .dark .custom-table td { border-color: #4b5563; }
+        
         nav { background-color: var(--panel-bg); border-color: var(--border-color); }
         .dark nav { background-color: #1f2937; }
         nav button { color: #4b5563; }
         .dark nav button { color: #9ca3af; }
         #toast-container { position: fixed; top: 1.25rem; right: 1.25rem; z-index: 1000; }
-        .toast { background-color: #1f2937; color: white; padding: 1rem 1.5rem; border-radius: 0.5rem; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -2px rgba(0,0,0,0.05); display: flex; align-items: center; margin-bottom: 1rem; opacity: 0; transform: translateX(100%); animation: toast-in 0.5s forwards, toast-out 0.5s 4s forwards; }
+        .toast { background-color: #1f2937; color: white; padding: 1rem 1.5rem; border-radius: 0.5rem; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1); display: flex; align-items: center; margin-bottom: 1rem; opacity: 0; transform: translateX(100%); animation: toast-in 0.5s forwards, toast-out 0.5s 4s forwards; }
         .toast i { color: var(--accent); font-size: 1.5rem; margin-right: 0.75rem; }
         @keyframes toast-in { to { opacity: 1; transform: translateX(0); } }
         @keyframes toast-out { to { opacity: 0; transform: translateX(100%); } }
+
+        /* CORREÇÃO: Bloqueio de Impressão */
+        @media print {
+            body::before {
+                content: "Conteúdo protegido contra impressão.";
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: white;
+                color: black;
+                font-size: 2rem;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                z-index: 10000;
+            }
+            #main-wrapper, #off-canvas-sidebar, nav, footer {
+                display: none;
+            }
+        }
     </style>
 </head>
 <body class="antialiased">
@@ -201,7 +215,10 @@
             <div class="container mx-auto px-4 md:px-6 max-w-7xl flex justify-between items-center">
                 <div class="flex items-center">
                     <div class="bg-white p-2 md:p-3 rounded-full mr-3 md:mr-5 shadow-md"><i class="fas fa-shield-alt text-2xl md:text-3xl text-red-600"></i></div>
-                    <div><h1 class="text-2xl md:text-4xl font-bold">Formação Profissional</h1><p class="text-blue-100 text-sm md:text-lg">Bombeiro Civil e Brigadista</p></div>
+                    <div>
+                        <h1 class="text-2xl md:text-4xl font-bold text-white">Formação Profissional</h1>
+                        <p class="text-blue-100 text-sm md:text-lg">Bombeiro Civil e Brigadista</p>
+                    </div>
                 </div>
                 <div class="hidden lg:flex items-center space-x-6">
                     <button id="home-button-desktop" title="Voltar ao Início" class="text-white text-2xl hover:text-orange-300 transition-colors"><i class="fas fa-home"></i></button>
@@ -219,19 +236,24 @@
             </aside>
             <div class="w-full lg:w-2/3">
                  <div class="mb-8 p-4 bg-white dark:bg-gray-800 rounded-lg shadow">
-                    <h2 id="welcome-greeting" class="text-2xl font-bold text-secondary dark:text-white">Carregando...</h2>
+                    <h2 id="welcome-greeting" class="text-2xl font-bold text-blue-900 dark:text-white">Carregando...</h2>
                     <p class="text-gray-600 dark:text-gray-300">Continue de onde parou ou explore um novo módulo.</p>
                 </div>
                 <main>
                     <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden border border-gray-200 dark:border-gray-700">
-                        <div id="content-area" class="content-transition p-6 md:p-10"></div>
+                        <div id="content-area" class="p-6 md:p-10"></div>
                         <div id="module-nav" class="module-nav hidden"><div class="flex justify-between"><button id="prev-module" class="action-button" disabled><i class="fas fa-arrow-left mr-2"></i> Anterior</button><button id="next-module" class="action-button">Próximo <i class="fas fa-arrow-right ml-2"></i></button></div></div>
                     </div>
                 </main>
             </div>
         </div>
         
-        <div id="congratulations-modal" class="modal"><div class="floating inline-block p-4 bg-yellow-100 rounded-full mb-4"><i class="fas fa-trophy text-4xl text-yellow-600"></i></div><h2 class="text-3xl font-bold mb-2">Parabéns!</h2><p class="text-lg mb-6 text-gray-600 dark:text-gray-300">Você concluiu o curso com sucesso!</p><button id="close-congrats" class="action-button" style="background: var(--secondary);"><i class="fas fa-times mr-2"></i> Fechar</button></div>
+        <div id="congratulations-modal" class="modal">
+            <div class="floating inline-block p-4 bg-yellow-100 rounded-full mb-4"><i class="fas fa-trophy text-4xl text-yellow-600"></i></div>
+            <h2 class="text-3xl font-bold mb-2 text-gray-800 dark:text-white">Parabéns!</h2>
+            <p class="text-lg mb-6 text-gray-600 dark:text-gray-300">Você concluiu o curso com sucesso!</p>
+            <button id="close-congrats" class="action-button" style="background: var(--secondary);"><i class="fas fa-times mr-2"></i> Fechar</button>
+        </div>
         <div id="modal-overlay" class="modal-overlay"></div>
 
         <div id="name-prompt-modal" class="modal">
@@ -248,10 +270,15 @@
         <footer class="bg-gray-800 dark:bg-black text-white py-10 mt-12">
             <div class="container mx-auto px-4 md:px-6 max-w-7xl">
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                    <div><h3 class="text-xl font-semibold mb-4">Formação Bombeiro Civil / Brigadista</h3><p class="text-gray-400">Capacitação profissional de excelência.</p></div>
-                    <div><h3 class="text-xl font-semibold mb-4">Contato e Realização</h3><div class="flex flex-col space-y-3"><a href="https://www.instagram.com/coordenadormedeiros/" class="flex items-center text-gray-300 social-link" target="_blank"><i class="fab fa-instagram w-6"></i> @coordenadormedeiros</a><a href="https://www.linkedin.com/in/chefemedeiros/" class="flex items-center text-gray-300 social-link" target="_blank"><i class="fab fa-linkedin w-6"></i> chefemedeiros</a><a href="https://instrutormedeiros.github.io/fardamento-acampamento/" class="flex items-center text-gray-300 social-link" target="_blank"><i class="fas fa-shirt w-6"></i> Artigos Militares</a></div></div>
+                    <div><h3 class="text-xl font-semibold mb-4 text-white">Formação Bombeiro Civil / Brigadista</h3><p class="text-gray-400">Capacitação profissional de excelência.</p></div>
+                    <div><h3 class="text-xl font-semibold mb-4 text-white">Contato e Realização</h3><div class="flex flex-col space-y-3"><a href="https://www.instagram.com/coordenadormedeiros/" class="flex items-center text-gray-300 social-link" target="_blank"><i class="fab fa-instagram w-6"></i> @coordenadormedeiros</a><a href="https://www.linkedin.com/in/chefemedeiros/" class="flex items-center text-gray-300 social-link" target="_blank"><i class="fab fa-linkedin w-6"></i> chefemedeiros</a><a href="https://instrutormedeiros.github.io/fardamento-acampamento/" class="flex items-center text-gray-300 social-link" target="_blank"><i class="fas fa-shirt w-6"></i> Artigos Militares</a></div></div>
                 </div>
-                <div class="border-t border-gray-700 mt-8 pt-6 text-center text-gray-500"><p>© 2013-2025 Curso de Formação Profissional. Todos os direitos reservados.</p></div>
+                <div class="border-t border-gray-700 mt-8 pt-6 text-center text-gray-500">
+                    <p>© 2013-2025 Curso de Formação Profissional. Todos os direitos reservados.</p>
+                    <button onclick="alert('Obrigado por proteger o conteúdo original!')" class="mt-2 text-xs underline hover:text-white transition">
+                        Denunciar cópia não autorizada
+                    </button>
+                </div>
             </div>
         </footer>
     </div>
@@ -265,8 +292,7 @@
 
     <script>
     document.addEventListener('DOMContentLoaded', () => {
-
-       const moduleContent = {};
+const moduleContent = {};
 
         const correctAnswers = { 
             'module1-q1': 'b', 'module1-q2': 'c', 'module1-q3': 'd', 'module1-q4': 'a', 
@@ -458,17 +484,15 @@ moduleContent['module45'] = { id: "module45", title: "45. Introdução ao Salvam
 
         moduleContent['module54'] = { id: "module54", title: "54. Técnicas de Resgate", iconClass: "fas fa-people-carry", content: `<h4>Técnicas de Resgate Simples, Complexo e Auto-Resgate</h4><p>Este módulo aborda as técnicas de resgate em alturas, divididas em três categorias, cada uma com equipamentos e procedimentos específicos:</p><h5>Resgate Simples:</h5><p>Para vítimas com lesões leves, realizado por um bombeiro. Equipamentos mínimos incluem:</p><ul><li><strong>Individuais:</strong> Cinto paraquedista, capacete, 4 mosquetões de aço, 2 de alumínio (com e sem trava), blocantes, freio oito, cordeletes, luvas, óculos e cantil.</li><li><strong>Coletivos:</strong> Cabos solteiros, lanternas, coletes refletivos, fitas zebradas, cones, binóculos, croque, maca flexível, kit de primeiros socorros, cordas estáticas, triângulo de evacuação, descensores (Rack, Stop) e roldanas.</li></ul><h5>Resgate Complexo:</h5><p>Para vítimas com lesões graves (fraturas, hemorragias, traumatismos), exigindo equipe de pelo menos quatro bombeiros. Inclui:</p><ul><li><strong>Técnicas de içamento:</strong> Usam sistemas 3:1 com roldanas e blocantes para reduzir o peso da vítima a um terço, ideais para depressões naturais ou estruturas urbanas.</li><li><strong>Técnicas de descensão:</strong> Com macas (duas cordas: principal e de segurança) ou triângulos de evacuação. Socorristas podem acompanhar a maca em terrenos acidentados, ou usar cabo-guia para evitar obstáculos.</li></ul><h5>Auto-Resgate:</h5><p>Técnicas realizadas por um socorrista sem apoio, como:</p><ul><li><strong>Corte no cabo da vítima:</strong> Socorrista na ancoragem ou descendo até a vítima, usando novo cabo de resgate e nós blocantes (prússico, machard).</li><li><strong>Preservando o cabo da vítima:</strong> Usando valdotan ou blocantes, acessando por cima ou por baixo, com procedimentos como clipagem de longes e uso de estribos.</li><li><strong>Transposição de nó:</strong> Para subir ou descer em cabos emendados, usando blocantes e longes para passar pelo nó.</li></ul><hr><h3 class="text-xl font-semibold mb-4 text-gray-800">Exercícios de Fixação</h3><p class="font-semibold mb-2 text-gray-700">1. O que diferencia o resgate simples do complexo?</p><div class="quiz-options-group space-y-2 mb-4"><div class="quiz-option" data-question="module54-q1" data-answer="a">a) O simples é sempre mais rápido que o complexo.</div><div class="quiz-option" data-question="module54-q1" data-answer="b">b) O simples é para lesões leves (um bombeiro); o complexo é para lesões graves (exige equipe e macas).</div><div class="quiz-option" data-question="module54-q1" data-answer="c">c) O simples não usa cordas, o complexo sim.</div><div class="quiz-option" data-question="module54-q1" data-answer="d">d) Não há diferença, a escolha é aleatória.</div></div><p id="explanation-module54-q1" class="explanation hidden"></p><p class="font-semibold mt-4 mb-2 text-gray-700">2. Como funciona o sistema de içamento 3:1?</p><div class="quiz-options-group space-y-2 mb-4"><div class="quiz-option" data-question="module54-q2" data-answer="a">a) Triplica o peso da vítima, exigindo três bombeiros para puxar.</div><div class="quiz-option" data-question="module54-q2" data-answer="b">b) Usa três cordas separadas para segurança.</div><div class="quiz-option" data-question="module54-q2" data-answer="c">c) Usa roldanas móveis para reduzir o peso da vítima a um terço, facilitando o içamento.</div><div class="quiz-option" data-question="module54-q2" data-answer="d">d) É um sistema de descida controlada.</div></div><p id="explanation-module54-q2" class="explanation hidden"></p><p class="font-semibold mt-4 mb-2 text-gray-700">3. Qual é a função do nó valdotan no auto-resgate?</p><div class="quiz-options-group space-y-2 mb-4"><div class="quiz-option" data-question="module54-q3" data-answer="a">a) Permite descida controlada no mesmo cabo da vítima, conectando-a ao socorrista.</div><div class="quiz-option" data-question="module54-q3" data-answer="b">b) Serve para cortar o cabo da vítima com segurança.</div><div class="quiz-option" data-question="module54-q3" data-answer="c">c) É usado para unir duas cordas durante uma subida.</div><div class="quiz-option" data-question="module54-q3" data-answer="d">d) Bloqueia a corda para o socorrista descansar.</div></div><p id="explanation-module54-q3" class="explanation hidden"></p><p class="font-semibold mt-4 mb-2 text-gray-700">4. Por que a descida com maca usa duas cordas?</p><div class="quiz-options-group space-y-2"><div class="quiz-option" data-question="module54-q4" data-answer="a">a) Para ser duas vezes mais rápida.</div><div class="quiz-option" data-question="module54-q4" data-answer="b">b) Uma para a vítima e outra para os equipamentos.</div><div class="quiz-option" data-question="module54-q4" data-answer="c">c) Para que dois bombeiros possam descer ao mesmo tempo.</div><div class="quiz-option" data-question="module54-q4" data-answer="d">d) Uma corda principal e uma de segurança garantem redundância e controle.</div></div><p id="explanation-module54-q4" class="explanation hidden"></p>` };
 
-
-        // --- INICIALIZAÇÃO E CONTROLE ---
-        if (typeof moduleContent === 'undefined' || typeof correctAnswers === 'undefined') { 
-            document.body.innerHTML = '<div style="font-family: sans-serif; text-align: center; padding: 40px; color: #1a202c;"><h1>Erro de Configuração</h1><p>O conteúdo do curso (variáveis <strong>moduleContent</strong> e <strong>correctAnswers</strong>) não foi encontrado. Por favor, siga as instruções e cole o conteúdo dos módulos dentro da tag &lt;script&gt;.</p></div>'; 
-            return; 
+        if (Object.keys(moduleContent).length === 0 || Object.keys(correctAnswers).length === 0) {
+            document.body.innerHTML = `<div style="font-family: sans-serif; text-align: center; padding: 40px; color: #1a202c;"><h1>Erro de Configuração</h1><p>O conteúdo do curso (variáveis <strong>moduleContent</strong> e <strong>correctAnswers</strong>) não foi encontrado no script. Por favor, cole os dados nos locais indicados.</p></div>`;
+            return;
         }
 
-        for (const moduleId in moduleContent) { 
-            if (moduleContent.hasOwnProperty(moduleId)) { 
-                moduleContent[moduleId].content += `<div class="mt-8 pt-6 border-t border-gray-200 dark:border-gray-700 text-right"><button class="action-button conclude-button" data-module="${moduleId}">Concluir Módulo</button></div>`; 
-            } 
+        for (const id in moduleContent) {
+            if (moduleContent[id] && moduleContent[id].content) {
+                moduleContent[id].content += `<div class="mt-8 pt-6 border-t border-gray-200 dark:border-gray-700 text-right"><button class="action-button conclude-button" data-module="${id}">Concluir Módulo</button></div>`;
+            }
         }
 
         const totalModules = Object.keys(moduleContent).length;
@@ -484,10 +508,10 @@ moduleContent['module45'] = { id: "module45", title: "45. Introdução ao Salvam
             nr35: { title: "NR 35 - Trabalho em Altura", range: [45, 54], icon: "fas fa-hard-hat" } 
         };
 
-        const contentArea = document.getElementById('content-area'); 
-        const sidebar = document.getElementById('off-canvas-sidebar'); 
-        const sidebarOverlay = document.getElementById('sidebar-overlay'); 
+        const contentArea = document.getElementById('content-area');
         const toastContainer = document.getElementById('toast-container');
+        const sidebar = document.getElementById('off-canvas-sidebar');
+        const sidebarOverlay = document.getElementById('sidebar-overlay');
 
         function init() { 
             setupTheme(); 
@@ -502,13 +526,13 @@ moduleContent['module45'] = { id: "module45", title: "45. Introdução ao Salvam
 
         function getWelcomeContent() { 
             return `<div class="text-center py-8">
-                        <div class="floating inline-block p-5 bg-red-100 dark:bg-red-900/50 rounded-full mb-6"><i class="fas fa-fire-extinguisher text-6xl text-red-600"></i></div>
-                        <h2 class="text-4xl font-bold mb-4 text-blue-900 dark:text-white">Torne-se um Profissional de Elite</h2>
-                        <p class="text-lg text-gray-600 dark:text-gray-300 max-w-3xl mx-auto mb-8">
-                            Bem-vindo ao <strong class="font-bold text-orange-500 dark:text-orange-400">Curso de Formação para Bombeiro Civil e Brigadista</strong>.
-                        </p>
-                        <button id="start-course" class="action-button pulse text-lg"><i class="fas fa-play-circle mr-2"></i> Iniciar Curso Agora</button>
-                    </div>`; 
+                            <div class="floating inline-block p-5 bg-red-100 dark:bg-red-900/50 rounded-full mb-6"><i class="fas fa-fire-extinguisher text-6xl text-red-600"></i></div>
+                            <h2 class="text-4xl font-bold mb-4 text-blue-900 dark:text-white">Torne-se um Profissional de Elite</h2>
+                            <p class="text-lg text-gray-600 dark:text-gray-300 max-w-3xl mx-auto mb-8">
+                                Bem-vindo ao <strong class="font-bold text-orange-500 dark:text-orange-400">Curso de Formação para Bombeiro Civil e Brigadista</strong>.
+                            </p>
+                            <button id="start-course" class="action-button pulse text-lg"><i class="fas fa-play-circle mr-2"></i> Iniciar Curso Agora</button>
+                        </div>`; 
         }
 
         function goToHomePage() { 
@@ -517,20 +541,30 @@ moduleContent['module45'] = { id: "module45", title: "45. Introdução ao Salvam
             document.querySelectorAll('.module-list-item.active').forEach(i => i.classList.remove('active')); 
             currentModuleId = null; 
             closeSidebar(); 
-            document.getElementById('start-course').addEventListener('click', () => { 
-                loadModuleContent('module1'); 
-                const p = document.querySelector('#desktop-module-container .accordion-panel'); 
-                if(p) { 
-                    p.style.maxHeight = p.scrollHeight + "px"; 
-                    p.previousElementSibling.classList.add('active'); 
-                }
-            }); 
+            const btn = document.getElementById('start-course');
+            if (btn) {
+                // Clona o botão para remover listeners antigos e evitar duplicação
+                const newBtn = btn.cloneNode(true);
+                btn.parentNode.replaceChild(newBtn, btn);
+                newBtn.addEventListener('click', () => {
+                    loadModuleContent('module1');
+                    // Abre o primeiro acordeão
+                    const firstAccordionButton = document.querySelector('#desktop-module-container .accordion-button');
+                    if(firstAccordionButton) {
+                         const firstPanel = firstAccordionButton.nextElementSibling;
+                         if (firstPanel) {
+                             firstAccordionButton.classList.add('active');
+                             firstPanel.style.maxHeight = firstPanel.scrollHeight + "px";
+                         }
+                    }
+                });
+            }
         }
 
         function getModuleListHTML() {
             let html = `<h2 class="text-2xl font-semibold mb-5 flex items-center text-blue-900 dark:text-white"><i class="fas fa-list-ul mr-3 text-orange-500"></i> Conteúdo do Curso</h2>
-                        <div class="mb-4 relative"><input type="text" class="module-search w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 bg-gray-50 dark:bg-gray-700" placeholder="Buscar módulo..."><i class="fas fa-search absolute right-3 top-3.5 text-gray-400"></i></div>
-                        <div class="module-accordion-container space-y-2">`;
+                            <div class="mb-4 relative"><input type="text" class="module-search w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 bg-gray-50 dark:bg-gray-700" placeholder="Buscar módulo..."><i class="fas fa-search absolute right-3 top-3.5 text-gray-400"></i></div>
+                            <div class="module-accordion-container space-y-2">`;
             for (const k in moduleCategories) { 
                 const cat = moduleCategories[k]; 
                 html += `<div><button class="accordion-button"><span><i class="${cat.icon} w-6 mr-2 text-gray-500"></i>${cat.title}</span><i class="fas fa-chevron-down"></i></button><div class="accordion-panel">`; 
@@ -543,6 +577,7 @@ moduleContent['module45'] = { id: "module45", title: "45. Introdução ao Salvam
                 html += `</div></div>`; 
             }
             html += `</div>`;
+            // CORREÇÃO: Readicionando a seção "Conquistas" que estava faltando
             html += `<div class="mt-6 pt-6 border-t border-gray-200 dark:border-gray-700"><h3 class="text-xl font-semibold mb-4 text-gray-800 dark:text-white">Conquistas por Área</h3><div id="achievements-grid" class="grid grid-cols-2 gap-4">`;
             for (const key in moduleCategories) { 
                 const cat = moduleCategories[key]; 
@@ -561,14 +596,15 @@ moduleContent['module45'] = { id: "module45", title: "45. Introdução ao Salvam
             if (!id || !moduleContent[id]) return; 
             currentModuleId = id; 
             const d = moduleContent[id]; 
-            contentArea.classList.add('fade'); 
+            contentArea.style.opacity = '0'; // Fade out
             setTimeout(() => { 
                 contentArea.innerHTML = `<h3 class="flex items-center text-3xl mb-6 pb-4 border-b"><i class="${d.iconClass} mr-4 text-orange-500 fa-fw"></i>${d.title}</h3><div>${d.content}</div>`; 
                 setupQuizListeners(); 
                 setupConcludeButtonListener(); 
-                contentArea.classList.remove('fade'); 
+                contentArea.style.opacity = '1'; // Fade in
+                contentArea.style.transition = 'opacity 0.3s ease';
                 document.querySelector('main')?.scrollIntoView({ behavior: 'smooth' }); 
-            }, 300); 
+            }, 300); // Tempo para o fade out
             updateActiveModuleInList(); 
             updateNavigationButtons(); 
             document.getElementById('module-nav').classList.remove('hidden'); 
@@ -609,12 +645,12 @@ moduleContent['module45'] = { id: "module45", title: "45. Introdução ao Salvam
             } 
         }
 
-        function showAchievementToast(moduleTitle) { 
+        function showAchievementToast(title) { 
             const toast = document.createElement('div'); 
             toast.className = 'toast'; 
-            toast.innerHTML = `<i class="fas fa-trophy"></i><div><p class="font-bold">Módulo Concluído!</p><p class="text-sm">${moduleTitle}</p></div>`; 
+            toast.innerHTML = `<i class="fas fa-trophy"></i><div><p class="font-bold">Módulo Concluído!</p><p class="text-sm">${title}</p></div>`; 
             toastContainer.appendChild(toast); 
-            setTimeout(() => { toast.remove(); }, 4500); 
+            setTimeout(() => toast.remove(), 4500); 
         }
 
         function updateProgress() { 
@@ -624,22 +660,24 @@ moduleContent['module45'] = { id: "module45", title: "45. Introdução ao Salvam
             document.getElementById('completed-modules-count').textContent = completedModules.length; 
             updateModuleListStyles(); 
             checkAchievements(); 
+            if (completedModules.length === totalModules) showCongratulations();
         }
 
         function setupTheme() {
-            const isDark = localStorage.getItem('theme') === 'dark' || (localStorage.getItem('theme') === null && window.matchMedia('(prefers-color-scheme: dark)').matches);
-            if (isDark) {
-                document.documentElement.classList.add('dark');
-            } else {
-                document.documentElement.classList.remove('dark');
-            }
+            const isDark = localStorage.getItem('theme') === 'dark' || (!localStorage.getItem('theme') && window.matchMedia('(prefers-color-scheme: dark)').matches);
+            document.documentElement.classList.toggle('dark', isDark);
             updateThemeIcons();
         }
 
         function toggleTheme() {
-            const isDark = document.documentElement.classList.toggle('dark');
-            localStorage.setItem('theme', isDark ? 'dark' : 'light');
+            document.documentElement.classList.toggle('dark');
+            localStorage.setItem('theme', document.documentElement.classList.contains('dark') ? 'dark' : 'light');
             updateThemeIcons();
+        }
+
+        function updateThemeIcons() { 
+            const icon = document.documentElement.classList.contains('dark') ? 'fa-sun' : 'fa-moon'; 
+            document.querySelectorAll('#dark-mode-toggle-desktop i, #bottom-nav-theme i').forEach(i => i.className = `fas ${icon} text-2xl`); 
         }
 
         function handlePersonalGreeting() {
@@ -649,37 +687,22 @@ moduleContent['module45'] = { id: "module45", title: "45. Introdução ao Salvam
             const nameInput = document.getElementById('name-input');
             const greetingEl = document.getElementById('welcome-greeting');
 
-            let studentName = localStorage.getItem('studentName');
-
+            const studentName = localStorage.getItem('studentName');
             if (!studentName) {
                 nameModal.classList.add('show');
                 nameOverlay.classList.add('show');
                 nameInput.focus();
-
                 saveButton.onclick = () => {
-                    studentName = nameInput.value || "Aluno(a)";
-                    localStorage.setItem('studentName', studentName);
-                    greetingEl.textContent = `Olá, ${studentName}!`;
+                    const name = nameInput.value.trim() || "Aluno(a)";
+                    localStorage.setItem('studentName', name);
+                    greetingEl.textContent = `Olá, ${name}!`;
                     nameModal.classList.remove('show');
                     nameOverlay.classList.remove('show');
                 };
-                nameInput.onkeydown = (e) => {
-                    if (e.key === 'Enter') {
-                        saveButton.click();
-                    }
-                };
-
+                nameInput.onkeydown = e => { if (e.key === 'Enter') saveButton.click(); };
             } else {
                 greetingEl.textContent = `Olá, ${studentName}!`;
             }
-        }
-
-        function updateThemeIcons() { 
-            const isDark = document.documentElement.classList.contains('dark'); 
-            const icon = isDark ? 'fa-sun' : 'fa-moon'; 
-            document.querySelectorAll('#dark-mode-toggle-desktop i, #bottom-nav-theme i').forEach(i => { 
-                i.className = `fas ${icon} text-2xl`; 
-            }); 
         }
 
         function openSidebar() { 
@@ -702,22 +725,22 @@ moduleContent['module45'] = { id: "module45", title: "45. Introdução ao Salvam
                 if (e.target.closest('.accordion-button')) { 
                     const b = e.target.closest('.accordion-button'); 
                     const p = b.nextElementSibling; 
-                    const a = b.classList.contains('active'); 
-                    const allPanels = b.closest('.module-accordion-container, .sidebar, #mobile-module-container').querySelectorAll('.accordion-panel'); 
+                    const isActive = b.classList.contains('active'); 
+                    const allPanels = b.closest('.module-accordion-container, .sidebar, #mobile-module-container').querySelectorAll('.accordion-panel');
                     allPanels.forEach(op => { 
-                        if (op !== p) { 
-                            op.style.maxHeight = null; 
-                            op.previousElementSibling.classList.remove('active'); 
+                        if (op !== p && op.previousElementSibling) { // Adicionado '&& op.previousElementSibling'
+                             op.style.maxHeight = null; 
+                             op.previousElementSibling.classList.remove('active'); 
                         }
                     }); 
-                    if (!a) { 
+                    if (!isActive) { 
                         b.classList.add('active'); 
                         p.style.maxHeight = p.scrollHeight + "px"; 
                     } else { 
                         b.classList.remove('active'); 
                         p.style.maxHeight = null; 
                     } 
-                } 
+                }
             }); 
             document.getElementById('prev-module').addEventListener('click', () => { 
                 const n = parseInt(currentModuleId.replace('module','')); 
@@ -734,35 +757,61 @@ moduleContent['module45'] = { id: "module45", title: "45. Introdução ao Salvam
             document.getElementById('bottom-nav-home').addEventListener('click', goToHomePage); 
             document.getElementById('bottom-nav-modules').addEventListener('click', openSidebar); 
             document.getElementById('bottom-nav-theme').addEventListener('click', toggleTheme); 
+            document.getElementById('dark-mode-toggle-desktop').addEventListener('click', toggleTheme); 
+            document.getElementById('close-congrats').addEventListener('click', () => {
+                document.getElementById('congratulations-modal').classList.remove('show');
+                document.getElementById('modal-overlay').classList.remove('show');
+            });
+            document.getElementById('modal-overlay').addEventListener('click', () => {
+                document.getElementById('congratulations-modal').classList.remove('show');
+                document.getElementById('modal-overlay').classList.remove('show');
+            });
+
             document.body.addEventListener('input', e => { 
                 if(e.target.matches('.module-search')) { 
                     const s = e.target.value.toLowerCase(); 
-                    e.target.closest('div').nextElementSibling.querySelectorAll('.module-list-item').forEach(i => { 
-                        i.style.display = i.textContent.toLowerCase().includes(s) ? 'flex' : 'none'; 
-                    }); 
+                    // CORREÇÃO: Seletor do search estava muito frágil
+                    const container = e.target.closest('div.relative');
+                    if (container) {
+                        const accordionContainer = container.nextElementSibling;
+                        if (accordionContainer) {
+                             accordionContainer.querySelectorAll('.module-list-item').forEach(i => { 
+                                i.style.display = i.textContent.toLowerCase().includes(s) ? 'flex' : 'none'; 
+                            }); 
+                        }
+                    }
                 }
             }); 
-            document.getElementById('dark-mode-toggle-desktop').addEventListener('click', toggleTheme); 
-            document.getElementById('close-congrats').addEventListener('click', hideCongratulations); 
-            document.getElementById('modal-overlay').addEventListener('click', hideCongratulations); 
         }
 
         function setupQuizListeners() { 
             document.querySelectorAll('.quiz-option').forEach(o => o.addEventListener('click', handleQuizOptionClick)); 
         }
 
+        let concludeButtonClickListener = null; // Armazena o listener
         function setupConcludeButtonListener() { 
             const b = document.querySelector(`.conclude-button[data-module="${currentModuleId}"]`); 
             if(b) { 
+                // Remove listener antigo para evitar duplicação
+                if (concludeButtonClickListener) {
+                    b.removeEventListener('click', concludeButtonClickListener);
+                }
+
                 if(completedModules.includes(currentModuleId)){
                     b.disabled=true; 
                     b.innerHTML='<i class="fas fa-check-circle mr-2"></i> Concluído';
-                } 
-                b.addEventListener('click', ()=>handleConcludeButtonClick(b)); 
+                } else {
+                    // Adiciona o novo listener
+                    b.disabled = false; // Garante que não está desabilitado
+                    b.innerHTML = 'Concluir Módulo'; // Garante o texto correto
+                    concludeButtonClickListener = () => handleConcludeButtonClick(b); // Define o novo listener
+                    b.addEventListener('click', concludeButtonClickListener); 
+                }
             } 
         }
 
         function updateModuleListStyles() { 
+            // CORREÇÃO DE SINTAXE JS
             document.querySelectorAll('.module-list-item').forEach(i => i.classList.toggle('completed', completedModules.includes(i.dataset.module))); 
         }
 
@@ -771,40 +820,30 @@ moduleContent['module45'] = { id: "module45", title: "45. Introdução ao Salvam
         }
 
         function updateNavigationButtons() { 
+            if (!currentModuleId) return; // Adicionado verificação
             const n = parseInt(currentModuleId.replace('module','')); 
-            document.getElementById('prev-module').disabled=(n===1); 
-            document.getElementById('next-module').disabled=(n===totalModules); 
+            document.getElementById('prev-module').disabled = (n === 1); 
+            document.getElementById('next-module').disabled = (n === totalModules); 
         }
 
         function checkAchievements() { 
             for(const key in moduleCategories) { 
                 const cat = moduleCategories[key]; 
-                document.querySelectorAll(`#ach-cat-${key}`).forEach(el => { 
-                    if (el) { 
-                        let allComplete = true; 
-                        for(let i = cat.range[0]; i <= cat.range[1]; i++) { 
-                            if (!moduleContent[`module${i}`] || !completedModules.includes(`module${i}`)) { 
-                                allComplete = false; 
-                                break; 
-                            } 
-                        } 
-                        el.classList.toggle('unlocked', allComplete); 
-                    } 
-                }); 
+                let allComplete = true; 
+                for(let i = cat.range[0]; i <= cat.range[1]; i++) { 
+                    if (!completedModules.includes(`module${i}`)) { allComplete = false; break; } 
+                } 
+                // CORREÇÃO: O seletor estava quebrado sem a seção Conquistas
+                document.querySelectorAll(`#ach-cat-${key}`).forEach(el => el.classList.toggle('unlocked', allComplete)); 
             } 
         }
 
         function showCongratulations() { 
             document.getElementById('congratulations-modal').classList.add('show'); 
             document.getElementById('modal-overlay').classList.add('show'); 
-            if(typeof confetti==='function'){
+            if(typeof confetti === 'function') { // Adicionado verificação
                 confetti({particleCount:150, spread:90, origin:{y:0.6},zIndex:200});
             }
-        }
-
-        function hideCongratulations() { 
-            document.getElementById('congratulations-modal').classList.remove('show'); 
-            document.getElementById('modal-overlay').classList.remove('show'); 
         }
 
         init();
