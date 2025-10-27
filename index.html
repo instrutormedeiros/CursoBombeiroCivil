@@ -12,37 +12,26 @@
 
     <script>
       document.addEventListener('DOMContentLoaded', () => {
-        // Bloqueio de Seleção
         document.body.style.userSelect = 'none';
         document.body.style.webkitUserSelect = 'none';
         document.body.style.mozUserSelect = 'none';
         document.body.style.msUserSelect = 'none';
-
-        // Bloqueio de Clique Direito
         document.addEventListener('contextmenu', e => e.preventDefault());
-        
-        // Bloqueio de Atalhos
         document.addEventListener('keydown', e => {
           if (e.ctrlKey || e.metaKey) {
             if (['c','a','x','v','s','p','u'].includes(e.key.toLowerCase())) e.preventDefault();
           }
           if (e.key === 'F12') e.preventDefault();
           if (e.ctrlKey && e.shiftKey && ['I','J','C'].includes(e.key.toUpperCase())) e.preventDefault();
-          // Manter o alerta para Ctrl+P
           if ((e.ctrlKey || e.metaKey) && e.key === 'p') {
             e.preventDefault();
             alert('Impressão desativada para proteger o conteúdo.');
           }
         });
-        
-        // Bloqueio de Arrastar Imagem
         document.querySelectorAll('img').forEach(img => {
           img.draggable = false;
           img.addEventListener('dragstart', e => e.preventDefault());
         });
-
-        // NOTA: A marca d'água dinâmica do JS foi removida daqui.
-        // Ela será gerada APENAS NO PRINT via CSS.
       });
     </script>
     
@@ -119,7 +108,6 @@
         .module-list-item i.module-icon { margin-right: 0.75rem; font-size: 1.1rem; width: 20px; text-align: center; }
         .module-list-item .fa-check-circle { display: none; margin-left: auto; margin-right: 0; font-size: 1rem; }
         
-        /* Estilos de Cor para Conteúdo (Baseado no seu código de exemplo) */
         #content-area { background-color: var(--panel-bg); color: var(--light-text); }
         #content-area h3 { color: var(--secondary); border-bottom: 2px solid var(--border-color); }
         #content-area h4 { color: var(--secondary); }
@@ -133,7 +121,6 @@
         .dark #content-area p, .dark #content-area ul, .dark #content-area li { color: var(--light-text); }
         .dark #content-area p.font-semibold { color: #a5b4fc; }
         .dark #content-area strong { color: var(--accent); }
-        /* Fim dos estilos de cor */
 
         .key-concept { background-color: var(--info-bg); border-left: 4px solid var(--info-border); padding: 1rem; margin-bottom: 1rem; border-radius: 0.5rem; }
         .key-concept h5 { color: #2c5282; font-weight: 700; }
@@ -156,35 +143,56 @@
         @keyframes toast-in { to { opacity: 1; transform: translateX(0); } }
         @keyframes toast-out { to { opacity: 0; transform: translateX(100%); } }
 
-        /* NOVO/MELHORADO: Marca d'água APENAS para impressão (Ctrl+P) */
+        /* --- IMPLEMENTAÇÃO FUNÇÃO 3: Animação de Pulso (Modificada para Piscar) --- */
+        @keyframes blink-animation {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.6; transform: scale(1.03); }
+        }
+        .blinking-button {
+            animation: blink-animation 1s infinite ease-in-out;
+        }
+
+        /* --- IMPLEMENTAÇÃO TAREFA 4: Ênfase no Desenvolvedor --- */
+        @keyframes gradient-flow {
+            0% { background-position: 200% center; }
+            100% { background-position: 0% center; }
+        }
+        .developer-credit {
+            font-weight: bold;
+            font-family: 'Lora', serif; /* Fonte mais elegante */
+            font-size: 1rem; /* Tamanho maior */
+            background: linear-gradient(90deg, var(--accent), #fff, var(--accent)); /* Gradiente com branco */
+            background-size: 200% auto;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: gradient-flow 6s linear infinite;
+        }
+
+
+        /* Marca d'água APENAS para impressão (Ctrl+P) */
         @media print {
-            /* Oculta todo o conteúdo original da página */
             body > *:not(#print-watermark) {
                 display: none !important;
             }
-
-            /* Estiliza a marca d'água para impressão */
             #print-watermark {
-                display: block !important; /* Torna visível apenas no print */
+                display: block !important; 
                 position: fixed;
-                top: 0;
-                left: 0;
-                width: 100vw;
-                height: 100vh;
-                background-color: white; /* Garante fundo branco para o print */
-                color: #000; /* Cor do texto da marca d'água */
+                top: 0; left: 0;
+                width: 100vw; height: 100vh;
+                background-color: white; 
+                color: #000; 
                 font-family: 'Arial', sans-serif;
-                font-size: 8vw; /* Tamanho do texto responsivo ao viewport */
+                font-size: 8vw; 
                 font-weight: bold;
-                opacity: 0.15; /* Opacidade para não cobrir totalmente */
+                opacity: 0.15; 
                 display: flex;
                 justify-content: center;
                 align-items: center;
                 text-align: center;
-                transform: rotate(-30deg); /* Angulo */
+                transform: rotate(-30deg); 
                 line-height: 1.2;
                 letter-spacing: 2px;
-                z-index: 99999; /* Garante que fique por cima de tudo */
+                z-index: 99999; 
             }
         }
     </style>
@@ -285,6 +293,7 @@
                     <div><h3 class="text-xl font-semibold mb-4 text-white">Contato e Realização</h3><div class="flex flex-col space-y-3"><a href="https://www.instagram.com/coordenadormedeiros/" class="flex items-center text-gray-300 social-link" target="_blank"><i class="fab fa-instagram w-6"></i> @coordenadormedeiros</a><a href="https://www.linkedin.com/in/chefemedeiros/" class="flex items-center text-gray-300 social-link" target="_blank"><i class="fab fa-linkedin w-6"></i> chefemedeiros</a><a href="https://instrutormedeiros.github.io/fardamento-acampamento/" class="flex items-center text-gray-300 social-link" target="_blank"><i class="fas fa-shirt w-6"></i> Artigos Militares</a></div></div>
                 </div>
                 <div class="border-t border-gray-700 mt-8 pt-6 text-center text-gray-500">
+                    <p class="developer-credit mb-2">Desenvolvido por Instrutor Medeiros</p>
                     <p>© 2013-2025 Curso de Formação Profissional. Todos os direitos reservados.</p>
                     <button onclick="alert('Obrigado por proteger o conteúdo original!')" class="mt-2 text-xs underline hover:text-white transition">
                         Denunciar cópia não autorizada
@@ -304,7 +313,7 @@
     <script>
     document.addEventListener('DOMContentLoaded', () => {
 
-       const moduleContent = {};
+         const moduleContent = {};
 
         const correctAnswers = { 
             'module1-q1': 'b', 'module1-q2': 'c', 'module1-q3': 'd', 'module1-q4': 'a', 
@@ -497,6 +506,7 @@ moduleContent['module45'] = { id: "module45", title: "45. Introdução ao Salvam
         moduleContent['module54'] = { id: "module54", title: "54. Técnicas de Resgate", iconClass: "fas fa-people-carry", content: `<h4>Técnicas de Resgate Simples, Complexo e Auto-Resgate</h4><p>Este módulo aborda as técnicas de resgate em alturas, divididas em três categorias, cada uma com equipamentos e procedimentos específicos:</p><h5>Resgate Simples:</h5><p>Para vítimas com lesões leves, realizado por um bombeiro. Equipamentos mínimos incluem:</p><ul><li><strong>Individuais:</strong> Cinto paraquedista, capacete, 4 mosquetões de aço, 2 de alumínio (com e sem trava), blocantes, freio oito, cordeletes, luvas, óculos e cantil.</li><li><strong>Coletivos:</strong> Cabos solteiros, lanternas, coletes refletivos, fitas zebradas, cones, binóculos, croque, maca flexível, kit de primeiros socorros, cordas estáticas, triângulo de evacuação, descensores (Rack, Stop) e roldanas.</li></ul><h5>Resgate Complexo:</h5><p>Para vítimas com lesões graves (fraturas, hemorragias, traumatismos), exigindo equipe de pelo menos quatro bombeiros. Inclui:</p><ul><li><strong>Técnicas de içamento:</strong> Usam sistemas 3:1 com roldanas e blocantes para reduzir o peso da vítima a um terço, ideais para depressões naturais ou estruturas urbanas.</li><li><strong>Técnicas de descensão:</strong> Com macas (duas cordas: principal e de segurança) ou triângulos de evacuação. Socorristas podem acompanhar a maca em terrenos acidentados, ou usar cabo-guia para evitar obstáculos.</li></ul><h5>Auto-Resgate:</h5><p>Técnicas realizadas por um socorrista sem apoio, como:</p><ul><li><strong>Corte no cabo da vítima:</strong> Socorrista na ancoragem ou descendo até a vítima, usando novo cabo de resgate e nós blocantes (prússico, machard).</li><li><strong>Preservando o cabo da vítima:</strong> Usando valdotan ou blocantes, acessando por cima ou por baixo, com procedimentos como clipagem de longes e uso de estribos.</li><li><strong>Transposição de nó:</strong> Para subir ou descer em cabos emendados, usando blocantes e longes para passar pelo nó.</li></ul><hr><h3 class="text-xl font-semibold mb-4 text-gray-800">Exercícios de Fixação</h3><p class="font-semibold mb-2 text-gray-700">1. O que diferencia o resgate simples do complexo?</p><div class="quiz-options-group space-y-2 mb-4"><div class="quiz-option" data-question="module54-q1" data-answer="a">a) O simples é sempre mais rápido que o complexo.</div><div class="quiz-option" data-question="module54-q1" data-answer="b">b) O simples é para lesões leves (um bombeiro); o complexo é para lesões graves (exige equipe e macas).</div><div class="quiz-option" data-question="module54-q1" data-answer="c">c) O simples não usa cordas, o complexo sim.</div><div class="quiz-option" data-question="module54-q1" data-answer="d">d) Não há diferença, a escolha é aleatória.</div></div><p id="explanation-module54-q1" class="explanation hidden"></p><p class="font-semibold mt-4 mb-2 text-gray-700">2. Como funciona o sistema de içamento 3:1?</p><div class="quiz-options-group space-y-2 mb-4"><div class="quiz-option" data-question="module54-q2" data-answer="a">a) Triplica o peso da vítima, exigindo três bombeiros para puxar.</div><div class="quiz-option" data-question="module54-q2" data-answer="b">b) Usa três cordas separadas para segurança.</div><div class="quiz-option" data-question="module54-q2" data-answer="c">c) Usa roldanas móveis para reduzir o peso da vítima a um terço, facilitando o içamento.</div><div class="quiz-option" data-question="module54-q2" data-answer="d">d) É um sistema de descida controlada.</div></div><p id="explanation-module54-q2" class="explanation hidden"></p><p class="font-semibold mt-4 mb-2 text-gray-700">3. Qual é a função do nó valdotan no auto-resgate?</p><div class="quiz-options-group space-y-2 mb-4"><div class="quiz-option" data-question="module54-q3" data-answer="a">a) Permite descida controlada no mesmo cabo da vítima, conectando-a ao socorrista.</div><div class="quiz-option" data-question="module54-q3" data-answer="b">b) Serve para cortar o cabo da vítima com segurança.</div><div class="quiz-option" data-question="module54-q3" data-answer="c">c) É usado para unir duas cordas durante uma subida.</div><div class="quiz-option" data-question="module54-q3" data-answer="d">d) Bloqueia a corda para o socorrista descansar.</div></div><p id="explanation-module54-q3" class="explanation hidden"></p><p class="font-semibold mt-4 mb-2 text-gray-700">4. Por que a descida com maca usa duas cordas?</p><div class="quiz-options-group space-y-2"><div class="quiz-option" data-question="module54-q4" data-answer="a">a) Para ser duas vezes mais rápida.</div><div class="quiz-option" data-question="module54-q4" data-answer="b">b) Uma para a vítima e outra para os equipamentos.</div><div class="quiz-option" data-question="module54-q4" data-answer="c">c) Para que dois bombeiros possam descer ao mesmo tempo.</div><div class="quiz-option" data-question="module54-q4" data-answer="d">d) Uma corda principal e uma de segurança garantem redundância e controle.</div></div><p id="explanation-module54-q4" class="explanation hidden"></p>` };
 
 
+
         if (Object.keys(moduleContent).length === 0 || Object.keys(correctAnswers).length === 0) {
             document.body.innerHTML = `<div style="font-family: sans-serif; text-align: center; padding: 40px; color: #1a202c;"><h1>Erro de Configuração</h1><p>O conteúdo do curso (variáveis <strong>moduleContent</strong> e <strong>correctAnswers</strong>) não foi encontrado no script. Por favor, cole os dados nos locais indicados.</p></div>`;
             return;
@@ -510,6 +520,7 @@ moduleContent['module45'] = { id: "module45", title: "45. Introdução ao Salvam
 
         const totalModules = Object.keys(moduleContent).length;
         let completedModules = JSON.parse(localStorage.getItem('gateBombeiroCompletedModules_v3')) || [];
+        let notifiedAchievements = JSON.parse(localStorage.getItem('gateBombeiroNotifiedAchievements_v3')) || []; // IMPLEMENTAÇÃO FUNÇÃO 2
         let currentModuleId = null;
         const moduleCategories = { 
             rh: { title: "Relações Humanas", range: [1, 5], icon: "fas fa-users" }, 
@@ -525,7 +536,7 @@ moduleContent['module45'] = { id: "module45", title: "45. Introdução ao Salvam
         const toastContainer = document.getElementById('toast-container');
         const sidebar = document.getElementById('off-canvas-sidebar');
         const sidebarOverlay = document.getElementById('sidebar-overlay');
-        const printWatermark = document.getElementById('print-watermark'); // Novo elemento
+        const printWatermark = document.getElementById('print-watermark'); 
 
         function init() { 
             setupTheme(); 
@@ -536,10 +547,9 @@ moduleContent['module45'] = { id: "module45", title: "45. Introdução ao Salvam
             updateProgress(); 
             addEventListeners(); 
             goToHomePage(); 
-            setupPrintWatermarkContent(); // Chama a função para configurar o texto da marca d'água de impressão
+            setupPrintWatermarkContent();
         }
 
-        // NOVO: Função para definir o texto da marca d'água de impressão
         function setupPrintWatermarkContent() {
             const studentName = localStorage.getItem('studentName') || 'Aluno(a)';
             if (printWatermark) {
@@ -564,6 +574,9 @@ moduleContent['module45'] = { id: "module45", title: "45. Introdução ao Salvam
             document.querySelectorAll('.module-list-item.active').forEach(i => i.classList.remove('active')); 
             currentModuleId = null; 
             closeSidebar(); 
+            // IMPLEMENTAÇÃO FUNÇÃO 3: Parar de piscar ao ir para home
+            document.getElementById('next-module')?.classList.remove('blinking-button');
+
             const btn = document.getElementById('start-course');
             if (btn) {
                 const newBtn = btn.cloneNode(true);
@@ -652,23 +665,42 @@ moduleContent['module45'] = { id: "module45", title: "45. Introdução ao Salvam
             }
         }
 
+        // --- IMPLEMENTAÇÃO FUNÇÃO 3: Guia Pós-Conclusão ---
         function handleConcludeButtonClick(b) { 
             const id = b.dataset.module; 
             if (id && !completedModules.includes(id)) { 
                 completedModules.push(id); 
                 localStorage.setItem('gateBombeiroCompletedModules_v3', JSON.stringify(completedModules)); 
-                updateProgress(); 
+                updateProgress(); // 'updateProgress' agora chama 'checkAchievements'
                 b.disabled = true; 
                 b.innerHTML = '<i class="fas fa-check-circle mr-2"></i> Concluído'; 
-                showAchievementToast(moduleContent[id].title); 
+                showAchievementToast(moduleContent[id].title, false); // Passa 'false' (não é categoria)
                 confetti({ particleCount: 60, spread: 70, origin: { y: 0.6 }, zIndex: 2000 }); 
+
+                // Adiciona o scroll e o pulso
+                setTimeout(() => {
+                    const navContainer = document.getElementById('module-nav');
+                    const nextButton = document.getElementById('next-module');
+                    if (navContainer) {
+                        navContainer.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                        if (nextButton && !nextButton.disabled) {
+                            // Adiciona a classe que faz piscar
+                            nextButton.classList.add('blinking-button');
+                        }
+                    }
+                }, 700); // 700ms de delay
             } 
         }
 
-        function showAchievementToast(title) { 
+        // --- IMPLEMENTAÇÃO FUNÇÃO 2: Toast de Gamificação ---
+        function showAchievementToast(title, isCategory = false) { 
             const toast = document.createElement('div'); 
             toast.className = 'toast'; 
-            toast.innerHTML = `<i class="fas fa-trophy"></i><div><p class="font-bold">Módulo Concluído!</p><p class="text-sm">${title}</p></div>`; 
+            if (isCategory) {
+                toast.innerHTML = `<i class="fas fa-medal" style="color: #FFD700;"></i><div><p class="font-bold">Conquista Desbloqueada!</p><p class="text-sm">Categoria: ${title}</p></div>`;
+            } else {
+                toast.innerHTML = `<i class="fas fa-trophy"></i><div><p class="font-bold">Módulo Concluído!</p><p class="text-sm">${title}</p></div>`; 
+            }
             toastContainer.appendChild(toast); 
             setTimeout(() => toast.remove(), 4500); 
         }
@@ -679,7 +711,7 @@ moduleContent['module45'] = { id: "module45", title: "45. Introdução ao Salvam
             document.getElementById('progress-bar').style.width = `${p}%`; 
             document.getElementById('completed-modules-count').textContent = completedModules.length; 
             updateModuleListStyles(); 
-            checkAchievements(); 
+            checkAchievements(); // Chama a verificação de conquistas aqui
             if (totalModules > 0 && completedModules.length === totalModules) showCongratulations(); 
         }
 
@@ -745,9 +777,16 @@ moduleContent['module45'] = { id: "module45", title: "45. Introdução ao Salvam
         }
 
         function addEventListeners() { 
+            const nextButton = document.getElementById('next-module');
+            const prevButton = document.getElementById('prev-module');
+            const homeButtonDesktop = document.getElementById('home-button-desktop');
+            const homeButtonBottom = document.getElementById('bottom-nav-home');
+
             document.body.addEventListener('click', e => { 
+                // IMPLEMENTAÇÃO FUNÇÃO 3: Parar de piscar ao navegar
                 if (e.target.closest('.module-list-item')) { 
                     loadModuleContent(e.target.closest('.module-list-item').dataset.module); 
+                    nextButton?.classList.remove('blinking-button');
                 } 
                 if (e.target.closest('.accordion-button')) { 
                     const b = e.target.closest('.accordion-button'); 
@@ -770,21 +809,28 @@ moduleContent['module45'] = { id: "module45", title: "45. Introdução ao Salvam
                     } 
                 }
             }); 
-            document.getElementById('prev-module').addEventListener('click', () => { 
+            
+            prevButton.addEventListener('click', () => { 
                 if (!currentModuleId) return;
                 const n = parseInt(currentModuleId.replace('module','')); 
                 if(n > 1) loadModuleContent(`module${n-1}`); 
+                nextButton?.classList.remove('blinking-button'); // Parar de piscar
             }); 
-            document.getElementById('next-module').addEventListener('click', () => { 
+            nextButton.addEventListener('click', () => { 
                 if (!currentModuleId) return;
                 const n = parseInt(currentModuleId.replace('module','')); 
                 if(n < totalModules) loadModuleContent(`module${n+1}`); 
+                nextButton?.classList.remove('blinking-button'); // Parar de piscar
             }); 
+            
             document.getElementById('mobile-menu-button').addEventListener('click', openSidebar); 
             document.getElementById('close-sidebar-button').addEventListener('click', closeSidebar); 
             sidebarOverlay.addEventListener('click', closeSidebar); 
-            document.getElementById('home-button-desktop').addEventListener('click', goToHomePage); 
-            document.getElementById('bottom-nav-home').addEventListener('click', goToHomePage); 
+            
+            // Adiciona remoção do blink aos botões HOME
+            homeButtonDesktop.addEventListener('click', goToHomePage); 
+            homeButtonBottom.addEventListener('click', goToHomePage); 
+            
             document.getElementById('bottom-nav-modules').addEventListener('click', openSidebar); 
             document.getElementById('bottom-nav-theme').addEventListener('click', toggleTheme); 
             document.getElementById('dark-mode-toggle-desktop').addEventListener('click', toggleTheme); 
@@ -861,7 +907,9 @@ moduleContent['module45'] = { id: "module45", title: "45. Introdução ao Salvam
             document.getElementById('next-module').disabled = (n === totalModules); 
         }
 
+        // --- IMPLEMENTAÇÃO FUNÇÃO 2: Gamificação ---
         function checkAchievements() { 
+            let newNotification = false;
             for(const key in moduleCategories) { 
                 const cat = moduleCategories[key]; 
                 let allComplete = true; 
@@ -870,8 +918,19 @@ moduleContent['module45'] = { id: "module45", title: "45. Introdução ao Salvam
                         allComplete = false; break; 
                     } 
                 } 
+                
+                if (allComplete && !notifiedAchievements.includes(key)) {
+                    showAchievementToast(cat.title, true); // 'true' = é uma categoria
+                    notifiedAchievements.push(key);
+                    newNotification = true;
+                }
+                
                 document.querySelectorAll(`#ach-cat-${key}`).forEach(el => el.classList.toggle('unlocked', allComplete)); 
             } 
+            if (newNotification) {
+                // Usa uma chave de localStorage diferente para as notificações
+                localStorage.setItem('gateBombeiroNotifiedAchievements_v3', JSON.stringify(notifiedAchievements));
+            }
         }
 
         function showCongratulations() { 
