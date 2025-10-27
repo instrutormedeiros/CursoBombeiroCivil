@@ -12,11 +12,16 @@
 
     <script>
       document.addEventListener('DOMContentLoaded', () => {
+        // Bloqueio de Seleção
         document.body.style.userSelect = 'none';
         document.body.style.webkitUserSelect = 'none';
         document.body.style.mozUserSelect = 'none';
         document.body.style.msUserSelect = 'none';
+
+        // Bloqueio de Clique Direito
         document.addEventListener('contextmenu', e => e.preventDefault());
+        
+        // Bloqueio de Atalhos
         document.addEventListener('keydown', e => {
           if (e.ctrlKey || e.metaKey) {
             if (['c','a','x','v','s','p','u'].includes(e.key.toLowerCase())) e.preventDefault();
@@ -28,6 +33,8 @@
             alert('Impressão desativada para proteger o conteúdo.');
           }
         });
+        
+        // Bloqueio de Arrastar Imagem
         document.querySelectorAll('img').forEach(img => {
           img.draggable = false;
           img.addEventListener('dragstart', e => e.preventDefault());
@@ -143,25 +150,40 @@
         @keyframes toast-in { to { opacity: 1; transform: translateX(0); } }
         @keyframes toast-out { to { opacity: 0; transform: translateX(100%); } }
 
-        /* --- IMPLEMENTAÇÃO FUNÇÃO 3: Animação de Pulso (Modificada para Piscar) --- */
+        /* --- Animação Botão Próximo --- */
         @keyframes blink-animation {
-            0%, 100% { opacity: 1; transform: scale(1); }
-            50% { opacity: 0.6; transform: scale(1.03); }
+            0%, 100% { opacity: 1; transform: scale(1); box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+            50% { opacity: 0.7; transform: scale(1.03); box-shadow: 0 6px 12px rgba(247, 127, 0, 0.4); }
         }
         .blinking-button {
-            animation: blink-animation 1s infinite ease-in-out;
+            animation: blink-animation 1.2s infinite ease-in-out;
+            /* Cor do brilho no modo escuro */
+            box-shadow: 0 0 10px var(--accent);
+        }
+        /* Cor do brilho no modo claro */
+        .blinking-button {
+            box-shadow: 0 0 10px var(--primary-dark);
         }
 
-        /* --- IMPLEMENTAÇÃO TAREFA 4: Ênfase no Desenvolvedor --- */
+        /* --- Animação Nome Desenvolvedor --- */
         @keyframes gradient-flow {
             0% { background-position: 200% center; }
             100% { background-position: 0% center; }
         }
         .developer-credit {
             font-weight: bold;
-            font-family: 'Lora', serif; /* Fonte mais elegante */
-            font-size: 1rem; /* Tamanho maior */
-            background: linear-gradient(90deg, var(--accent), #fff, var(--accent)); /* Gradiente com branco */
+            font-family: 'Lora', serif;
+            font-size: 1rem;
+            /* Gradiente de Cores do Tema */
+            background: linear-gradient(90deg, var(--accent), var(--light-text), var(--accent));
+            background-size: 200% auto;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: gradient-flow 6s linear infinite;
+        }
+        .dark .developer-credit {
+             /* Gradiente de Cores do Tema Escuro */
+            background: linear-gradient(90deg, var(--accent), #fff, var(--accent));
             background-size: 200% auto;
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
@@ -295,13 +317,23 @@
                 <div class="border-t border-gray-700 mt-8 pt-6 text-center text-gray-500">
                     <p class="developer-credit mb-2">Desenvolvido por Instrutor Medeiros</p>
                     <p>© 2013-2025 Curso de Formação Profissional. Todos os direitos reservados.</p>
-                    <button onclick="alert('Obrigado por proteger o conteúdo original!')" class="mt-2 text-xs underline hover:text-white transition">
-                        Denunciar cópia não autorizada
-                    </button>
+                    <div class="mt-4">
+                        <button id="reset-progress" class="text-xs text-red-500 underline hover:text-red-400 transition mx-2">
+                            Resetar Progresso
+                        </button>
+                        <button onclick="alert('Obrigado por proteger o conteúdo original!')" class="text-xs underline hover:text-white transition mx-2">
+                            Denunciar cópia não autorizada
+                        </button>
+                    </div>
                 </div>
             </div>
         </footer>
     </div>
+    
+    <button id="back-to-top" class="action-button" style="position: fixed; bottom: 80px; right: 20px; z-index: 50; width: 50px; height: 50px; padding: 0; border-radius: 50%; display: none; transition: opacity 0.3s, transform 0.3s; opacity: 0; transform: translateY(20px); justify-content: center; align-items: center;">
+        <i class="fas fa-arrow-up"></i>
+    </button>
+
     <nav class="lg:hidden fixed bottom-0 left-0 w-full z-40">
         <div class="flex justify-around items-center h-16 bg-white dark:bg-gray-800 shadow-[0_-2px_10px_rgba(0,0,0,0.1)] dark:border-t dark:border-gray-700">
             <button id="bottom-nav-home" class="flex flex-col items-center justify-center text-gray-600 dark:text-gray-300 w-full h-full"><i class="fas fa-home text-2xl"></i><span class="text-xs">Início</span></button>
@@ -313,7 +345,7 @@
     <script>
     document.addEventListener('DOMContentLoaded', () => {
 
-         const moduleContent = {};
+        const moduleContent = {};
 
         const correctAnswers = { 
             'module1-q1': 'b', 'module1-q2': 'c', 'module1-q3': 'd', 'module1-q4': 'a', 
@@ -520,7 +552,7 @@ moduleContent['module45'] = { id: "module45", title: "45. Introdução ao Salvam
 
         const totalModules = Object.keys(moduleContent).length;
         let completedModules = JSON.parse(localStorage.getItem('gateBombeiroCompletedModules_v3')) || [];
-        let notifiedAchievements = JSON.parse(localStorage.getItem('gateBombeiroNotifiedAchievements_v3')) || []; // IMPLEMENTAÇÃO FUNÇÃO 2
+        let notifiedAchievements = JSON.parse(localStorage.getItem('gateBombeiroNotifiedAchievements_v3')) || [];
         let currentModuleId = null;
         const moduleCategories = { 
             rh: { title: "Relações Humanas", range: [1, 5], icon: "fas fa-users" }, 
@@ -574,9 +606,8 @@ moduleContent['module45'] = { id: "module45", title: "45. Introdução ao Salvam
             document.querySelectorAll('.module-list-item.active').forEach(i => i.classList.remove('active')); 
             currentModuleId = null; 
             closeSidebar(); 
-            // IMPLEMENTAÇÃO FUNÇÃO 3: Parar de piscar ao ir para home
-            document.getElementById('next-module')?.classList.remove('blinking-button');
-
+            document.getElementById('next-module')?.classList.remove('blinking-button'); // Para de piscar
+            
             const btn = document.getElementById('start-course');
             if (btn) {
                 const newBtn = btn.cloneNode(true);
@@ -642,6 +673,7 @@ moduleContent['module45'] = { id: "module45", title: "45. Introdução ao Salvam
             updateNavigationButtons(); 
             document.getElementById('module-nav').classList.remove('hidden'); 
             closeSidebar(); 
+            document.getElementById('next-module')?.classList.remove('blinking-button'); // Para de piscar ao carregar novo módulo
         }
 
         function handleQuizOptionClick(e) { 
@@ -665,34 +697,30 @@ moduleContent['module45'] = { id: "module45", title: "45. Introdução ao Salvam
             }
         }
 
-        // --- IMPLEMENTAÇÃO FUNÇÃO 3: Guia Pós-Conclusão ---
         function handleConcludeButtonClick(b) { 
             const id = b.dataset.module; 
             if (id && !completedModules.includes(id)) { 
                 completedModules.push(id); 
                 localStorage.setItem('gateBombeiroCompletedModules_v3', JSON.stringify(completedModules)); 
-                updateProgress(); // 'updateProgress' agora chama 'checkAchievements'
+                updateProgress(); 
                 b.disabled = true; 
                 b.innerHTML = '<i class="fas fa-check-circle mr-2"></i> Concluído'; 
-                showAchievementToast(moduleContent[id].title, false); // Passa 'false' (não é categoria)
+                showAchievementToast(moduleContent[id].title, false);
                 confetti({ particleCount: 60, spread: 70, origin: { y: 0.6 }, zIndex: 2000 }); 
 
-                // Adiciona o scroll e o pulso
                 setTimeout(() => {
                     const navContainer = document.getElementById('module-nav');
                     const nextButton = document.getElementById('next-module');
                     if (navContainer) {
                         navContainer.scrollIntoView({ behavior: 'smooth', block: 'center' });
                         if (nextButton && !nextButton.disabled) {
-                            // Adiciona a classe que faz piscar
-                            nextButton.classList.add('blinking-button');
+                            nextButton.classList.add('blinking-button'); // Ativa o pisca-pisca
                         }
                     }
-                }, 700); // 700ms de delay
+                }, 700); 
             } 
         }
 
-        // --- IMPLEMENTAÇÃO FUNÇÃO 2: Toast de Gamificação ---
         function showAchievementToast(title, isCategory = false) { 
             const toast = document.createElement('div'); 
             toast.className = 'toast'; 
@@ -711,7 +739,7 @@ moduleContent['module45'] = { id: "module45", title: "45. Introdução ao Salvam
             document.getElementById('progress-bar').style.width = `${p}%`; 
             document.getElementById('completed-modules-count').textContent = completedModules.length; 
             updateModuleListStyles(); 
-            checkAchievements(); // Chama a verificação de conquistas aqui
+            checkAchievements(); 
             if (totalModules > 0 && completedModules.length === totalModules) showCongratulations(); 
         }
 
@@ -752,7 +780,7 @@ moduleContent['module45'] = { id: "module45", title: "45. Introdução ao Salvam
                     greetingEl.textContent = `Olá, ${name}!`;
                     nameModal.classList.remove('show');
                     nameOverlay.classList.remove('show');
-                    setupPrintWatermarkContent(); // Atualiza a marca d'água de impressão
+                    setupPrintWatermarkContent(); 
                 };
                 nameInput.onkeydown = e => { if (e.key === 'Enter') saveButton.click(); };
             } else {
@@ -783,7 +811,6 @@ moduleContent['module45'] = { id: "module45", title: "45. Introdução ao Salvam
             const homeButtonBottom = document.getElementById('bottom-nav-home');
 
             document.body.addEventListener('click', e => { 
-                // IMPLEMENTAÇÃO FUNÇÃO 3: Parar de piscar ao navegar
                 if (e.target.closest('.module-list-item')) { 
                     loadModuleContent(e.target.closest('.module-list-item').dataset.module); 
                     nextButton?.classList.remove('blinking-button');
@@ -810,39 +837,38 @@ moduleContent['module45'] = { id: "module45", title: "45. Introdução ao Salvam
                 }
             }); 
             
-            prevButton.addEventListener('click', () => { 
+            prevButton?.addEventListener('click', () => { 
                 if (!currentModuleId) return;
                 const n = parseInt(currentModuleId.replace('module','')); 
                 if(n > 1) loadModuleContent(`module${n-1}`); 
-                nextButton?.classList.remove('blinking-button'); // Parar de piscar
+                nextButton?.classList.remove('blinking-button');
             }); 
-            nextButton.addEventListener('click', () => { 
+            nextButton?.addEventListener('click', () => { 
                 if (!currentModuleId) return;
                 const n = parseInt(currentModuleId.replace('module','')); 
                 if(n < totalModules) loadModuleContent(`module${n+1}`); 
-                nextButton?.classList.remove('blinking-button'); // Parar de piscar
+                nextButton?.classList.remove('blinking-button');
             }); 
             
-            document.getElementById('mobile-menu-button').addEventListener('click', openSidebar); 
-            document.getElementById('close-sidebar-button').addEventListener('click', closeSidebar); 
-            sidebarOverlay.addEventListener('click', closeSidebar); 
+            document.getElementById('mobile-menu-button')?.addEventListener('click', openSidebar); 
+            document.getElementById('close-sidebar-button')?.addEventListener('click', closeSidebar); 
+            sidebarOverlay?.addEventListener('click', closeSidebar); 
             
-            // Adiciona remoção do blink aos botões HOME
-            homeButtonDesktop.addEventListener('click', goToHomePage); 
-            homeButtonBottom.addEventListener('click', goToHomePage); 
+            homeButtonDesktop?.addEventListener('click', goToHomePage); 
+            homeButtonBottom?.addEventListener('click', goToHomePage); 
             
-            document.getElementById('bottom-nav-modules').addEventListener('click', openSidebar); 
-            document.getElementById('bottom-nav-theme').addEventListener('click', toggleTheme); 
-            document.getElementById('dark-mode-toggle-desktop').addEventListener('click', toggleTheme); 
+            document.getElementById('bottom-nav-modules')?.addEventListener('click', openSidebar); 
+            document.getElementById('bottom-nav-theme')?.addEventListener('click', toggleTheme); 
+            document.getElementById('dark-mode-toggle-desktop')?.addEventListener('click', toggleTheme); 
             
             const congratsModal = document.getElementById('congratulations-modal');
             const modalOverlay = document.getElementById('modal-overlay');
             
-            document.getElementById('close-congrats').addEventListener('click', () => {
+            document.getElementById('close-congrats')?.addEventListener('click', () => {
                 if (congratsModal) congratsModal.classList.remove('show');
                 if (modalOverlay) modalOverlay.classList.remove('show');
             });
-            modalOverlay.addEventListener('click', () => {
+            modalOverlay?.addEventListener('click', () => {
                 if (congratsModal) congratsModal.classList.remove('show');
                 if (modalOverlay) modalOverlay.classList.remove('show');
             });
@@ -861,6 +887,47 @@ moduleContent['module45'] = { id: "module45", title: "45. Introdução ao Salvam
                     }
                 }
             }); 
+
+            // --- IMPLEMENTAÇÃO FUNÇÃO 4: Resetar Progresso ---
+            const resetButton = document.getElementById('reset-progress');
+            resetButton?.addEventListener('click', () => {
+                const isSure = confirm('ATENÇÃO!\n\nVocê tem certeza que deseja resetar todo o seu progresso? Esta ação não pode ser desfeita.');
+                
+                if (isSure) {
+                    localStorage.removeItem('gateBombeiroCompletedModules_v3');
+                    localStorage.removeItem('gateBombeiroNotifiedAchievements_v3');
+                    // Opcional: Manter o nome e o último módulo
+                    // localStorage.removeItem('studentName'); 
+                    // localStorage.removeItem('gateBombeiroLastModule_v3');
+                    
+                    alert('Progresso resetado.');
+                    location.reload();
+                }
+            });
+            
+            // --- IMPLEMENTAÇÃO FUNÇÃO 3: Botão Voltar ao Topo ---
+            const backToTopButton = document.getElementById('back-to-top');
+            if (backToTopButton) {
+                window.addEventListener('scroll', () => {
+                    if (window.scrollY > 300) {
+                        backToTopButton.style.display = 'flex';
+                        setTimeout(() => {
+                            backToTopButton.style.opacity = '1';
+                            backToTopButton.style.transform = 'translateY(0)';
+                        }, 10);
+                    } else {
+                        backToTopButton.style.opacity = '0';
+                        backToTopButton.style.transform = 'translateY(20px)';
+                        setTimeout(() => {
+                            backToTopButton.style.display = 'none';
+                        }, 300);
+                    }
+                });
+
+                backToTopButton.addEventListener('click', () => {
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                });
+            }
         }
 
         function setupQuizListeners() { 
@@ -928,7 +995,6 @@ moduleContent['module45'] = { id: "module45", title: "45. Introdução ao Salvam
                 document.querySelectorAll(`#ach-cat-${key}`).forEach(el => el.classList.toggle('unlocked', allComplete)); 
             } 
             if (newNotification) {
-                // Usa uma chave de localStorage diferente para as notificações
                 localStorage.setItem('gateBombeiroNotifiedAchievements_v3', JSON.stringify(notifiedAchievements));
             }
         }
