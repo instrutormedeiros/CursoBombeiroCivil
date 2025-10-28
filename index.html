@@ -150,20 +150,18 @@
         @keyframes toast-in { to { opacity: 1; transform: translateX(0); } }
         @keyframes toast-out { to { opacity: 0; transform: translateX(100%); } }
 
-        /* Animação Botão Próximo (PISCAR) */
         @keyframes blink-animation {
             0%, 100% { opacity: 1; transform: scale(1); box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
             50% { opacity: 0.7; transform: scale(1.03); box-shadow: 0 6px 12px rgba(247, 127, 0, 0.4); }
         }
         .blinking-button {
             animation: blink-animation 1.2s infinite ease-in-out;
-            box-shadow: 0 0 10px var(--primary-dark); /* Brilho no modo claro */
+            box-shadow: 0 0 10px var(--primary-dark);
         }
         .dark .blinking-button {
-            box-shadow: 0 0 10px var(--accent); /* Brilho no modo escuro */
+            box-shadow: 0 0 10px var(--accent);
         }
 
-        /* Animação Nome Desenvolvedor */
         @keyframes gradient-flow {
             0% { background-position: 200% center; }
             100% { background-position: 0% center; }
@@ -186,7 +184,6 @@
             animation: gradient-flow 6s linear infinite;
         }
 
-        /* Marca d'água APENAS para impressão (Ctrl+P) */
         @media print {
             body > *:not(#print-watermark) {
                 display: none !important;
@@ -212,6 +209,91 @@
                 z-index: 99999; 
             }
         }
+
+        /* --- Bloco de Anotações --- */
+        .notes-textarea {
+            width: 100%;
+            min-height: 150px;
+            padding: 1rem;
+            margin-top: 1.5rem;
+            border-radius: 0.5rem;
+            border: 2px solid var(--border-color);
+            background-color: var(--light-bg);
+            color: var(--dark-text);
+            transition: all 0.3s ease;
+            -webkit-user-select: auto;
+            -moz-user-select: auto;
+            -ms-user-select: auto;
+            user-select: auto;
+        }
+        .notes-textarea:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(247, 127, 0, 0.3);
+        }
+        .dark .notes-textarea {
+            background-color: #1a202c;
+            border-color: var(--border-color);
+            color: var(--light-text);
+        }
+        .dark .notes-textarea:focus {
+             border-color: var(--accent);
+             box-shadow: 0 0 0 3px rgba(255, 158, 0, 0.3);
+        }
+        
+        /* --- Modo Revisão (CORRIGIDO) --- */
+        #focus-menu-desktop { 
+            display: none; /* Escondido por padrão */
+            position: fixed;
+            top: 1rem;
+            right: 1rem;
+            z-index: 50;
+        }
+        #focus-nav-bar { display: none; } /* Escondido por padrão */
+
+        /* Esconde elementos normais QUANDO o modo foco está ATIVO */
+        body.focus-mode .progress-container,
+        body.focus-mode header,
+        body.focus-mode aside, /* <-- CORREÇÃO: Esta linha foi REMOVIDA */
+        body.focus-mode footer,
+        body.focus-mode nav:not(#focus-nav-bar), 
+        body.focus-mode #back-to-top {
+            display: none;
+        }
+        
+        /* MOSTRA os menus de foco quando 'focus-mode' está ativo */
+        body.focus-mode #focus-nav-bar {
+            display: block; /* CORREÇÃO: Alterado de 'flex' para 'block' */
+        }
+        @media (min-width: 1024px) {
+            body.focus-mode #focus-menu-desktop {
+                display: flex;
+            }
+            body.focus-mode #focus-nav-bar {
+                display: none; 
+            }
+            
+            /* CORREÇÃO: Esta regra força o sidebar mobile a funcionar no desktop */
+            /* QUANDO o modo foco está ativo e o sidebar é aberto */
+            body.focus-mode #off-canvas-sidebar.open {
+                display: block !important;
+            }
+        }
+        /* Fim da Correção Modo Revisão */
+
+
+        body.focus-mode .container.mx-auto.py-10 { padding-top: 2rem; }
+        body.focus-mode .lg\:w-2\/3 {
+            width: 100% !important;
+            max-width: 80rem; 
+            margin: 0 auto;
+        }
+        body.focus-mode #main-wrapper { padding-bottom: 2rem; }
+        body.focus-mode { padding-bottom: 70px; } 
+        @media (min-width: 1024px) {
+             body.focus-mode { padding-bottom: 0; } 
+        }
+
     </style>
 </head>
 <body class="antialiased">
@@ -251,6 +333,9 @@
                     <div class="hidden lg:flex items-center space-x-6">
                         <button id="home-button-desktop" title="Voltar ao Início" class="text-white text-2xl hover:text-orange-300 transition-colors"><i class="fas fa-home"></i></button>
                         <div class="bg-white bg-opacity-20 py-2 px-4 rounded-full text-sm font-semibold"><i class="fas fa-book-open mr-2"></i><span id="course-modules-count">...</span> Módulos</div>
+                        <button id="focus-mode-toggle" title="Modo Revisão" class="text-2xl text-white hover:text-orange-300 transition-colors">
+                            <i class="fas fa-book-reader"></i>
+                        </button>
                         <button id="dark-mode-toggle-desktop" class="text-2xl text-white hover:text-orange-300 transition-colors"><i class="fas fa-moon"></i></button>
                     </div>
                     <div class="lg:hidden">
@@ -333,14 +418,38 @@
         <div class="flex justify-around items-center h-16 bg-white dark:bg-gray-800 shadow-[0_-2px_10px_rgba(0,0,0,0.1)] dark:border-t dark:border-gray-700">
             <button id="bottom-nav-home" class="flex flex-col items-center justify-center text-gray-600 dark:text-gray-300 w-full h-full"><i class="fas fa-home text-2xl"></i><span class="text-xs">Início</span></button>
             <button id="bottom-nav-modules" class="flex flex-col items-center justify-center text-gray-600 dark:text-gray-300 w-full h-full"><i class="fas fa-list-ul text-2xl"></i><span class="text-xs">Módulos</span></button>
+            <button id="bottom-nav-focus" class="flex flex-col items-center justify-center text-gray-600 dark:text-gray-300 w-full h-full">
+                <i class="fas fa-book-reader text-2xl"></i><span class="text-xs">Revisão</span>
+            </button>
             <button id="bottom-nav-theme" class="flex flex-col items-center justify-center text-gray-600 dark:text-gray-300 w-full h-full"><i class="fas fa-moon text-2xl"></i><span class="text-xs">Tema</span></button>
         </div>
     </nav>
+    
+    <nav id="focus-nav-bar" class="lg:hidden fixed bottom-0 left-0 w-full z-40">
+        <div class="flex justify-around items-center h-16 bg-white dark:bg-gray-800 shadow-[0_-2px_10px_rgba(0,0,0,0.1)] dark:border-t dark:border-gray-700">
+            <button id="focus-nav-modules" class="flex flex-col items-center justify-center text-gray-600 dark:text-gray-300 w-full h-full">
+                <i class="fas fa-list-ul text-2xl"></i><span class="text-xs">Módulos</span>
+            </button>
+            <button id="focus-nav-exit" class="flex flex-col items-center justify-center text-red-500 dark:text-red-400 w-full h-full">
+                <i class="fas fa-times-circle text-2xl"></i><span class="text-xs">Sair</span>
+            </button>
+        </div>
+    </nav>
+
+    <div id="focus-menu-desktop" class="items-center space-x-2">
+         <button id="focus-menu-modules" title="Módulos" class="action-button" style="width: 50px; height: 50px; padding: 0; border-radius: 50%; background: var(--primary);">
+            <i class="fas fa-list-ul"></i>
+         </button>
+         <button id="focus-menu-exit" title="Sair do Modo Revisão" class="action-button" style="width: 50px; height: 50px; padding: 0; border-radius: 50%; background: var(--secondary);">
+            <i class="fas fa-times"></i>
+         </button>
+    </div>
+
 
     <script>
     document.addEventListener('DOMContentLoaded', () => {
 
-    const moduleContent = {};
+  const moduleContent = {};
 
         const correctAnswers = { 
             'module1-q1': 'b', 'module1-q2': 'c', 'module1-q3': 'd', 'module1-q4': 'a', 
@@ -539,11 +648,23 @@ moduleContent['module45'] = { id: "module45", title: "45. Introdução ao Salvam
             return;
         }
 
+        // Adiciona botão "Concluir" e Bloco de Anotações
         for (const id in moduleContent) {
             if (moduleContent[id] && moduleContent[id].content) {
+                // Adiciona o botão de concluir
                 moduleContent[id].content += `<div class="mt-8 pt-6 border-t border-gray-200 dark:border-gray-700 text-right"><button class="action-button conclude-button" data-module="${id}">Concluir Módulo</button></div>`;
+                
+                // Adiciona o Bloco de Anotações
+                moduleContent[id].content += `
+                    <div class="mt-10 pt-6 border-t-2 border-dashed border-gray-200 dark:border-gray-700">
+                        <h4 class="text-xl font-bold mb-3 text-secondary dark:text-gray-200"><i class="fas fa-pencil-alt mr-2"></i>Anotações Pessoais</h4>
+                        <p class="text-sm text-gray-500 dark:text-gray-400 mb-3">Suas notas para este módulo. Elas são salvas automaticamente no seu navegador.</p>
+                        <textarea id="notes-module-${id}" class="notes-textarea" placeholder="Digite suas anotações aqui..."></textarea>
+                    </div>
+                `;
             }
         }
+
 
         const totalModules = Object.keys(moduleContent).length;
         let completedModules = JSON.parse(localStorage.getItem('gateBombeiroCompletedModules_v3')) || [];
@@ -655,20 +776,36 @@ moduleContent['module45'] = { id: "module45", title: "45. Introdução ao Salvam
             if (!id || !moduleContent[id]) return; 
             currentModuleId = id; 
             const d = moduleContent[id]; 
+            const savedNote = localStorage.getItem('note-' + id) || ''; 
+            
             contentArea.style.opacity = '0';
             setTimeout(() => { 
-                contentArea.innerHTML = `<h3 class="flex items-center text-3xl mb-6 pb-4 border-b"><i class="${d.iconClass} mr-4 text-orange-500 fa-fw"></i>${d.title}</h3><div>${d.content}</div>`; 
+                contentArea.innerHTML = `
+                    <h3 class="flex items-center text-3xl mb-6 pb-4 border-b"><i class="${d.iconClass} mr-4 text-orange-500 fa-fw"></i>${d.title}</h3>
+                    <div>${d.content}</div>
+                `; 
+                
                 setupQuizListeners(); 
                 setupConcludeButtonListener(); 
+                
+                const notesTextarea = document.getElementById(`notes-module-${id}`);
+                if(notesTextarea) {
+                    notesTextarea.value = savedNote;
+                    notesTextarea.addEventListener('keyup', () => {
+                        localStorage.setItem('note-' + id, notesTextarea.value);
+                    });
+                }
+                
                 contentArea.style.opacity = '1';
                 contentArea.style.transition = 'opacity 0.3s ease';
                 document.querySelector('main')?.scrollIntoView({ behavior: 'smooth' }); 
             }, 300); 
+            
             updateActiveModuleInList(); 
             updateNavigationButtons(); 
             document.getElementById('module-nav').classList.remove('hidden'); 
             closeSidebar(); 
-            document.getElementById('next-module')?.classList.remove('blinking-button'); // Para de piscar
+            document.getElementById('next-module')?.classList.remove('blinking-button');
         }
 
         function handleQuizOptionClick(e) { 
@@ -709,7 +846,7 @@ moduleContent['module45'] = { id: "module45", title: "45. Introdução ao Salvam
                     if (navContainer) {
                         navContainer.scrollIntoView({ behavior: 'smooth', block: 'center' });
                         if (nextButton && !nextButton.disabled) {
-                            nextButton.classList.add('blinking-button');
+                            nextButton.classList.add('blinking-button'); 
                         }
                     }
                 }, 700); 
@@ -799,15 +936,25 @@ moduleContent['module45'] = { id: "module45", title: "45. Introdução ao Salvam
             }
         }
 
+        function toggleFocusMode() {
+            document.body.classList.toggle('focus-mode');
+            // Altera o ícone do botão desktop ao ativar/desativar
+            const focusIconDesktop = document.querySelector('#focus-mode-toggle i');
+            if (focusIconDesktop) {
+                 focusIconDesktop.className = document.body.classList.contains('focus-mode') ? 'fas fa-times-circle' : 'fas fa-book-reader';
+            }
+        }
+
         function addEventListeners() { 
             const nextButton = document.getElementById('next-module');
             const prevButton = document.getElementById('prev-module');
             const homeButtonDesktop = document.getElementById('home-button-desktop');
             const homeButtonBottom = document.getElementById('bottom-nav-home');
-
+            
             document.body.addEventListener('click', e => { 
-                if (e.target.closest('.module-list-item')) { 
-                    loadModuleContent(e.target.closest('.module-list-item').dataset.module); 
+                const moduleItem = e.target.closest('.module-list-item');
+                if (moduleItem) { 
+                    loadModuleContent(moduleItem.dataset.module); 
                     nextButton?.classList.remove('blinking-button');
                 } 
                 if (e.target.closest('.accordion-button')) { 
@@ -856,6 +1003,14 @@ moduleContent['module45'] = { id: "module45", title: "45. Introdução ao Salvam
             document.getElementById('bottom-nav-theme')?.addEventListener('click', toggleTheme); 
             document.getElementById('dark-mode-toggle-desktop')?.addEventListener('click', toggleTheme); 
             
+            // --- Listeners do Modo Revisão ---
+            document.getElementById('focus-mode-toggle')?.addEventListener('click', toggleFocusMode);
+            document.getElementById('bottom-nav-focus')?.addEventListener('click', toggleFocusMode);
+            document.getElementById('focus-menu-modules')?.addEventListener('click', openSidebar);
+            document.getElementById('focus-menu-exit')?.addEventListener('click', toggleFocusMode);
+            document.getElementById('focus-nav-modules')?.addEventListener('click', openSidebar);
+            document.getElementById('focus-nav-exit')?.addEventListener('click', toggleFocusMode);
+
             const congratsModal = document.getElementById('congratulations-modal');
             const modalOverlay = document.getElementById('modal-overlay');
             
@@ -883,24 +1038,26 @@ moduleContent['module45'] = { id: "module45", title: "45. Introdução ao Salvam
                 }
             }); 
 
-            // --- IMPLEMENTAÇÃO FUNÇÃO 4: Resetar Progresso ---
             const resetButton = document.getElementById('reset-progress');
             resetButton?.addEventListener('click', () => {
-                const isSure = confirm('ATENÇÃO!\n\nVocê tem certeza que deseja resetar todo o seu progresso? Esta ação não pode ser desfeita.');
+                const isSure = confirm('ATENÇÃO!\n\nVocê tem certeza que deseja resetar todo o seu progresso? Seu nome e todas as suas anotações também serão apagados.\n\nEsta ação não pode ser desfeita.');
                 
                 if (isSure) {
-                    // IMPLEMENTAÇÃO: Apagar o nome do aluno
                     localStorage.removeItem('studentName');
                     localStorage.removeItem('gateBombeiroCompletedModules_v3');
                     localStorage.removeItem('gateBombeiroNotifiedAchievements_v3');
-                    // localStorage.removeItem('gateBombeiroLastModule_v3'); // Opcional: pode manter ou remover
+                    
+                    Object.keys(localStorage).forEach(key => {
+                        if (key.startsWith('note-')) { 
+                            localStorage.removeItem(key);
+                        }
+                    });
                     
                     alert('Progresso resetado. Por favor, insira seu nome novamente.');
                     location.reload();
                 }
             });
             
-            // --- IMPLEMENTAÇÃO FUNÇÃO 3: Botão Voltar ao Topo ---
             const backToTopButton = document.getElementById('back-to-top');
             if (backToTopButton) {
                 window.addEventListener('scroll', () => {
@@ -969,7 +1126,6 @@ moduleContent['module45'] = { id: "module45", title: "45. Introdução ao Salvam
             document.getElementById('next-module').disabled = (n === totalModules); 
         }
 
-        // --- IMPLEMENTAÇÃO FUNÇÃO 2: Gamificação ---
         function checkAchievements() { 
             let newNotification = false;
             for(const key in moduleCategories) { 
@@ -982,7 +1138,7 @@ moduleContent['module45'] = { id: "module45", title: "45. Introdução ao Salvam
                 } 
                 
                 if (allComplete && !notifiedAchievements.includes(key)) {
-                    showAchievementToast(cat.title, true); // 'true' = é uma categoria
+                    showAchievementToast(cat.title, true); 
                     notifiedAchievements.push(key);
                     newNotification = true;
                 }
