@@ -150,22 +150,20 @@
         @keyframes toast-in { to { opacity: 1; transform: translateX(0); } }
         @keyframes toast-out { to { opacity: 0; transform: translateX(100%); } }
 
-        /* --- Animação Botão Próximo --- */
+        /* Animação Botão Próximo (PISCAR) */
         @keyframes blink-animation {
             0%, 100% { opacity: 1; transform: scale(1); box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
             50% { opacity: 0.7; transform: scale(1.03); box-shadow: 0 6px 12px rgba(247, 127, 0, 0.4); }
         }
         .blinking-button {
             animation: blink-animation 1.2s infinite ease-in-out;
-            /* Cor do brilho no modo escuro */
-            box-shadow: 0 0 10px var(--accent);
+            box-shadow: 0 0 10px var(--primary-dark); /* Brilho no modo claro */
         }
-        /* Cor do brilho no modo claro */
-        .blinking-button {
-            box-shadow: 0 0 10px var(--primary-dark);
+        .dark .blinking-button {
+            box-shadow: 0 0 10px var(--accent); /* Brilho no modo escuro */
         }
 
-        /* --- Animação Nome Desenvolvedor --- */
+        /* Animação Nome Desenvolvedor */
         @keyframes gradient-flow {
             0% { background-position: 200% center; }
             100% { background-position: 0% center; }
@@ -174,7 +172,6 @@
             font-weight: bold;
             font-family: 'Lora', serif;
             font-size: 1rem;
-            /* Gradiente de Cores do Tema */
             background: linear-gradient(90deg, var(--accent), var(--light-text), var(--accent));
             background-size: 200% auto;
             -webkit-background-clip: text;
@@ -182,14 +179,12 @@
             animation: gradient-flow 6s linear infinite;
         }
         .dark .developer-credit {
-             /* Gradiente de Cores do Tema Escuro */
             background: linear-gradient(90deg, var(--accent), #fff, var(--accent));
             background-size: 200% auto;
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             animation: gradient-flow 6s linear infinite;
         }
-
 
         /* Marca d'água APENAS para impressão (Ctrl+P) */
         @media print {
@@ -345,7 +340,7 @@
     <script>
     document.addEventListener('DOMContentLoaded', () => {
 
-        const moduleContent = {};
+    const moduleContent = {};
 
         const correctAnswers = { 
             'module1-q1': 'b', 'module1-q2': 'c', 'module1-q3': 'd', 'module1-q4': 'a', 
@@ -606,7 +601,7 @@ moduleContent['module45'] = { id: "module45", title: "45. Introdução ao Salvam
             document.querySelectorAll('.module-list-item.active').forEach(i => i.classList.remove('active')); 
             currentModuleId = null; 
             closeSidebar(); 
-            document.getElementById('next-module')?.classList.remove('blinking-button'); // Para de piscar
+            document.getElementById('next-module')?.classList.remove('blinking-button');
             
             const btn = document.getElementById('start-course');
             if (btn) {
@@ -673,7 +668,7 @@ moduleContent['module45'] = { id: "module45", title: "45. Introdução ao Salvam
             updateNavigationButtons(); 
             document.getElementById('module-nav').classList.remove('hidden'); 
             closeSidebar(); 
-            document.getElementById('next-module')?.classList.remove('blinking-button'); // Para de piscar ao carregar novo módulo
+            document.getElementById('next-module')?.classList.remove('blinking-button'); // Para de piscar
         }
 
         function handleQuizOptionClick(e) { 
@@ -714,7 +709,7 @@ moduleContent['module45'] = { id: "module45", title: "45. Introdução ao Salvam
                     if (navContainer) {
                         navContainer.scrollIntoView({ behavior: 'smooth', block: 'center' });
                         if (nextButton && !nextButton.disabled) {
-                            nextButton.classList.add('blinking-button'); // Ativa o pisca-pisca
+                            nextButton.classList.add('blinking-button');
                         }
                     }
                 }, 700); 
@@ -894,13 +889,13 @@ moduleContent['module45'] = { id: "module45", title: "45. Introdução ao Salvam
                 const isSure = confirm('ATENÇÃO!\n\nVocê tem certeza que deseja resetar todo o seu progresso? Esta ação não pode ser desfeita.');
                 
                 if (isSure) {
+                    // IMPLEMENTAÇÃO: Apagar o nome do aluno
+                    localStorage.removeItem('studentName');
                     localStorage.removeItem('gateBombeiroCompletedModules_v3');
                     localStorage.removeItem('gateBombeiroNotifiedAchievements_v3');
-                    // Opcional: Manter o nome e o último módulo
-                    // localStorage.removeItem('studentName'); 
-                    // localStorage.removeItem('gateBombeiroLastModule_v3');
+                    // localStorage.removeItem('gateBombeiroLastModule_v3'); // Opcional: pode manter ou remover
                     
-                    alert('Progresso resetado.');
+                    alert('Progresso resetado. Por favor, insira seu nome novamente.');
                     location.reload();
                 }
             });
