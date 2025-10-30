@@ -184,21 +184,21 @@
             animation: gradient-flow 6s linear infinite;
         }
         
-/* --- INÍCIO: NOVOS AJUSTES DE ESTILO (Espaçamento e Subtítulos) --- */
+/* --- INÍCIO: NOVOS AJUSTES DE ESTILO (Mobile Médio / Desktop Grande) --- */
 
-        /* 1. Ajuste de Espaçamento entre Linhas/Blocos (Valores Reduzidos) */
+        /* 1. Ajuste de Espaçamento (Padrão/Mobile) */
         #content-area > div > p,
         #content-area > div > ul,
         #content-area > div > ol,
         #content-area > div > .key-concept,
         #content-area > div > .warning-box {
-            margin-bottom: 1rem; /* Reduzido para 16px */
+            margin-bottom: 1.25rem; /* 20px (Um bom "respiro" no mobile) */
         }
         
-        /* Espaço entre o fim do conteúdo e os exercícios (Valores Reduzidos) */
+        /* Espaço entre conteúdo e exercícios (Padrão/Mobile) */
         #content-area > div > hr {
-            margin-top: 1.5rem;    /* Reduzido para 24px */
-            margin-bottom: 1.5rem; /* Reduzido para 24px */
+            margin-top: 2.5rem;    /* 40px (Bom espaço no mobile) */
+            margin-bottom: 2rem; /* 32px */
             border-color: var(--border-color);
         }
 
@@ -211,18 +211,38 @@
             list-style-type: decimal;
          }
 
-        /* 6. Aumento da Fonte dos Subtítulos (Mantido) */
+        /* 6. Tamanho dos Subtítulos (Padrão/Mobile) - Aumentados */
         #content-area > div > h4 {
-            font-size: 1.625rem; /* 26px */
-            font-weight: 700;
-            margin-top: 2.25rem; 
-            margin-bottom: 1rem; 
-        }
-        #content-area > div > h5 {
-            font-size: 1.375rem; /* 22px */
+            font-size: 1.5rem; /* 24px (Aumentado para mobile) */
             font-weight: 700;
             margin-top: 2rem; 
             margin-bottom: 0.75rem; 
+        }
+        #content-area > div > h5 {
+            font-size: 1.25rem; /* 20px (Aumentado para mobile) */
+            font-weight: 700;
+            margin-top: 1.75rem; 
+            margin-bottom: 0.5rem; 
+        }
+
+        /* Tamanhos Maiores (APENAS DESKTOP - a partir de 1024px) */
+        @media (min-width: 1024px) {
+            #content-area > div > h4 {
+                font-size: 1.75rem; /* 28px (Ainda maior no desktop) */
+                margin-top: 2.25rem; 
+                margin-bottom: 1rem; 
+            }
+            #content-area > div > h5 {
+                font-size: 1.5rem; /* 24px (Ainda maior no desktop) */
+                margin-top: 2rem; 
+                margin-bottom: 0.75rem; 
+            }
+            
+            /* Aumenta o espaço do <hr> APENAS no desktop */
+            #content-area > div > hr {
+                margin-top: 4rem;    /* 64px */
+                margin-bottom: 3rem; /* 48px */
+            }
         }
 
         /* Garante que o primeiro elemento não tenha espaço no topo */
@@ -235,6 +255,7 @@
             font-size: 1.125rem !important; /* 18px */
             margin-top: 0 !important;
             margin-bottom: 0.5rem !important;
+        }
         
         /* --- FIM: NOVOS AJUSTES DE ESTILO --- */
         }
