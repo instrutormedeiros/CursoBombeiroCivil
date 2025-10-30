@@ -186,7 +186,7 @@
         
 /* --- INÍCIO: NOVOS AJUSTES DE ESTILO (Mobile Médio / Desktop Grande) --- */
 
-        /* 1. Ajuste de Espaçamento (Padrão/Mobile) */
+        /* 1. Ajuste de Espaçamento entre Linhas/Blocos (Padrão/Mobile) */
         #content-area > div > p,
         #content-area > div > ul,
         #content-area > div > ol,
@@ -211,15 +211,25 @@
             list-style-type: decimal;
          }
 
+        /* --- CORREÇÃO: Tamanho do texto principal (Padrão/Mobile) --- */
+        #content-area > div > p,
+        #content-area > div > ul li,
+        #content-area > div > ol li {
+            font-size: 0.925rem; /* 15px (Reduzido para mobile) */
+            line-height: 1.6;  /* Ajusta a altura da linha para o novo tamanho */
+        }
+        /* --- FIM DA CORREÇÃO --- */
+
+
         /* 6. Tamanho dos Subtítulos (Padrão/Mobile) - Aumentados */
         #content-area > div > h4 {
-            font-size: 1.5rem; /* 24px (Aumentado para mobile) */
+            font-size: 1.375rem; /* 22px (Reduzido para mobile) */
             font-weight: 700;
             margin-top: 2rem; 
             margin-bottom: 0.75rem; 
         }
         #content-area > div > h5 {
-            font-size: 1.25rem; /* 20px (Aumentado para mobile) */
+            font-size: 1.2rem; /* 19.2px (Reduzido para mobile) */
             font-weight: 700;
             margin-top: 1.75rem; 
             margin-bottom: 0.5rem; 
@@ -227,13 +237,21 @@
 
         /* Tamanhos Maiores (APENAS DESKTOP - a partir de 1024px) */
         @media (min-width: 1024px) {
+            /* Retorna o texto principal ao tamanho padrão no desktop */
+            #content-area > div > p,
+            #content-area > div > ul li,
+            #content-area > div > ol li {
+                font-size: 1rem; /* 16px (Padrão) */
+                line-height: 1.75;
+            }
+
             #content-area > div > h4 {
-                font-size: 1.75rem; /* 28px (Ainda maior no desktop) */
+                font-size: 1.75rem; /* 28px (Grande no desktop) */
                 margin-top: 2.25rem; 
                 margin-bottom: 1rem; 
             }
             #content-area > div > h5 {
-                font-size: 1.5rem; /* 24px (Ainda maior no desktop) */
+                font-size: 1.5rem; /* 24px (Grande no desktop) */
                 margin-top: 2rem; 
                 margin-bottom: 0.75rem; 
             }
